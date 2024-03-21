@@ -24,14 +24,14 @@ Repo para proyectos de ML2. Somos el grupo 10.
  + Solo entrega un miembro del grupo (en Moodle).
 
 
-# Ayuda carga de datos
+## Ayuda carga de datos
 
 ```
 
 nom_fi_datos_Irrad = "nombre de mi fichero de irradiación"
 df_orig_Irrad = pd.read_csv(nom_fi_datos_Irrad)
 
-parseamos la fecha (cadena) para que sea un datetime con formato yyyy/mm/dd
+# parseamos la fecha (cadena) para que sea un datetime con formato yyyy/mm/dd
 
 df_orig_Irrad['FECHA'] = pd.to_datetime(df_orig_Irrad['FECHA'], format='%Y-%m-%d')
 
@@ -39,6 +39,12 @@ s = df_orig_Irrad.loc[:,'FECHA']
 df_orig_Irrad['FECHA'] =  s.dt.date
 
 ```
+
+# 2nd project Folder:
+
+No hemos terminado el primero y ya estás leyendo el segundo?
+
+Ansias, prisas. Trabaja en el primero anda.
 
 
 
