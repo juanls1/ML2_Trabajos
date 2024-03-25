@@ -1,7 +1,7 @@
 # ML2
 Repo para proyectos de ML2. Somos el grupo 10.
 
-# 1st project Folder: ASSESSMENT ENSEMBLE LEARNING
+# 1st project Folder: ENTREGA ENSEMBLE LEARNING
 
  + Estimar las utilizaciones horarias de un día a partir de las variables disponibles:
 
@@ -40,11 +40,33 @@ df_orig_Irrad['FECHA'] =  s.dt.date
 
 ```
 
-# 2nd project Folder:
+# 2nd project Folder: ENTREGA CNN (TENIA OTRO NOMBRE)
 
-No hemos terminado el primero y ya estás leyendo el segundo?
+Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases hecha:
 
-Ansias, prisas. Trabaja en el primero anda.
+ + Ordenar y hacer nuestro el código presente (es copia de la 3a práctica, igual que lo de cnn.py)
+
+ + Usar otros modelos preentrenados (Tampoco se tienen que probar todos, pero hacer research y explicar un poco cada uno, y por qué escogemos y probamos los que escojamos)
+
+ + Decongelar más capas (aprende más de nuestros datos) (en cnn.py)
+
+ + Cambiar batch size y número de epochs
+
+ + Crear nuestra propia CNN
+
+ + RAG y Fine tunning (¿Lo estamos haciendo ya?)
+
+ + Data augmentation (rotar imágenes, espejos, etc). Creo que ya se hace, investigar más (en cnn.py)
+
+ + Más datos (creo que no vale)
+
+ + No se pueden usar en color, verdad?
+
+ + Cambiar optimizer y criterion
+
+ + Cambiar learning rate y los pesos
+
+ + ¿Grid search? Quizás tarda demasiado
 
 
 
