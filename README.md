@@ -48,13 +48,13 @@ Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases h
 
  + Usar otros modelos preentrenados (Tampoco se tienen que probar todos, pero hacer research y explicar un poco cada uno, y por qué escogemos y probamos los que escojamos)
 
- + Decongelar más capas (aprende más de nuestros datos) (en cnn.py)
+ + Decongelar más capas (aprende más de nuestros datos) (en cnn.py). Esto es fine tunning, entrenar el modelo con nuestros datos y que se especialice
 
  + Cambiar batch size y número de epochs
 
  + Crear nuestra propia CNN
 
- + RAG y Fine tunning (¿Lo estamos haciendo ya?)
+ + RAG y Fine tunning (¿Lo estamos haciendo ya?). Diría que sí, fine tunning es descongelar capas, y RAG es hacer que el modelo responda con los datos dados por nosotros. Al darle datos de entrenamiento etiquetados diría que ya se hace (creo). Se podría hacer transfer learning (coger un modelo que haga otra cosa, como object detection, y cambiar la capa de object detection por una de classification)
 
  + Data augmentation (rotar imágenes, espejos, etc). Creo que ya se hace, investigar más (en cnn.py)
 
