@@ -5,6 +5,7 @@ from cnn import CNN
 import torchvision
 from data_loader import num_classes
 from cnn import load_model_weights
+from torch.utils.data import DataLoader
 
 def load_model(model_path, classes):
     model_weights = load_model_weights(model_path)
@@ -36,28 +37,24 @@ def main():
     if image_file is not None:
         # Preprocesar la imagen
         image = Image.open(image_file)
-        image = image.convert('L')  # Convertir la imagen a blanco y negro
-        image = image.resize((224, 224))  # ResNet50 requires 224x224 images
-        
-        # Convertir la imagen a un tensor de PyTorch
-        transform = torchvision.transforms.ToTensor()
-        image = transform(image)
-        
-        # Normalizar la imagen
-        normalize = torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
-        image = normalize(image)
-        
-        # Añadir dimensión batch
-        image = image.unsqueeze(0)
+        streamlit_transforms = torchvision.transforms.Compose([
+            torchvision.transforms.Resize((224, 224)),
+            torchvision.transforms.ToTensor(),
+            torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
+        ])
+
+        streamlit_image = torchvision.datasets.ImageFolder(image, transform=streamlit_transforms)
+
+        streamlit_loader = DataLoader(streamlit_image, batch_size=1, shuffle=False)
         
         # Realizar la predicción
-        predicted_labels = model.predict(image)
+        predicted_labels = model.predict(streamlit_loader)
 
-        #predicted_label = torch.argmax(predicted_labels, dim=1).item()
+        predicted_label = torch.argmax(predicted_labels, dim=1).item()
 
         # Mostrar la imagen y la predicción
         st.image(image_file, caption='Imagen cargada', use_column_width=True)
-        st.write(f'Clase predicha: {predicted_labels}')
+        st.write(f'Clase predicha: {predicted_label}')
 
 if __name__ == "__main__":
     main()
