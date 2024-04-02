@@ -10,7 +10,6 @@ def load_model(model_path, classes):
     model_weights = load_model_weights(model_path)
     model = CNN(torchvision.models.resnet50(weights='DEFAULT'), classes)
     model.load_state_dict(model_weights)
-    model.eval()
     return model
 
 def main():
@@ -52,13 +51,13 @@ def main():
         image = image.unsqueeze(0)
         
         # Realizar la predicción
-        predicted_labels = model(image)
+        predicted_labels = model.predict(image)
 
-        predicted_label = torch.argmax(predicted_labels, dim=1).item()
+        #predicted_label = torch.argmax(predicted_labels, dim=1).item()
 
         # Mostrar la imagen y la predicción
         st.image(image_file, caption='Imagen cargada', use_column_width=True)
-        st.write(f'Clase predicha: {predicted_label}')
+        st.write(f'Clase predicha: {predicted_labels}')
 
 if __name__ == "__main__":
     main()
