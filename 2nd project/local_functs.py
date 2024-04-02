@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import torch
 
 # Visualize a few images
 def imshow(inp, title=None):
@@ -21,3 +22,23 @@ def show_images_grid(images, titles, rows, cols):
         ax.axis('off')
     plt.tight_layout()
     plt.show()
+
+
+
+def preprocess_image(data_loader):
+    """Preprocess images from the given data loader.
+
+    Args:
+        data_loader: DataLoader with the images to preprocess.
+
+    Returns:
+        preprocessed_images: List of preprocessed images.
+    """
+    preprocessed_images = []
+    for images, _ in data_loader:
+        # Resize image to 224x224 (required by ResNet50)
+        resized_images = torch.nn.functional.interpolate(images, size=(224, 224), mode='bilinear', align_corners=False)
+        # Convert images to numpy arrays
+        image_arrays = resized_images.numpy()
+        preprocessed_images.extend(image_arrays)
+    return preprocessed_images
