@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 # Obtener la ruta absoluta de la carpeta que contiene el módulo
-root_dir = Path(__file__).resolve().parent.parent
+root_dir = Path(__file__).resolve().parent
 
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
@@ -54,12 +54,12 @@ classification_models = ['alexnet','convnext_base','convnext_large','convnext_sm
                          'swin_s','swin_t','swin_v2_b','swin_v2_s','swin_v2_t','vgg11','vgg11_bn','vgg13','vgg13_bn','vgg16','vgg16_bn','vgg19','vgg19_bn','vit_b_16',
                          'vit_b_32','vit_h_14','vit_l_16','vit_l_32','wide_resnet101_2','wide_resnet50_2'] # Obviously we do not have to run all. Do a research, test the bests
 Model_used = 'resnet50'
-Learning_rate = 1e-4
-Number_epochs = 1
-Criterion = 'cross_entropy'
+Learning_rate = 1e-5
+Number_epochs = 3
+Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
-Model_name = 'resnet50-1epoch' # Name of the model to save
+Model_name = 'resnet50-3epoch-LR1e-5' # Name of the model to save
 
 
 
@@ -73,7 +73,7 @@ Model_used_load = 'resnet50' # Model used for the loaded model
 # Constants used for the streamlit app
 
 Images_types = ['png', 'jpg', 'jpeg']
-Disp_Models = ["Modelo 1 (1 epoch)", "Modelo 2 (4 epochs)"]
+Disp_Models = ["Modelo 1 (1 epoch, 1e-4 LR)", "Modelo 2 (3 epochs, 1e-5 LR)"]
 Models_dir = os.path.join(root_dir, 'models')
 Models_paths = [os.path.join(Models_dir, 'resnet50-1epoch'), 
-                os.path.join(Models_dir, 'resnet50-1epoch')]
+                os.path.join(Models_dir, 'resnet50-3epoch-LR1e-5')]

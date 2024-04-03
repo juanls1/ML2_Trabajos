@@ -12,7 +12,7 @@ root_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(root_dir))
 
 from config.constants import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name
-from src.utils.data_loader import num_classes, train_loader, valid_loader
+from src.utils.data_loader import num_classes, train_loader
 from src.utils.cnn import CNN
 
 
@@ -21,7 +21,9 @@ from src.utils.cnn import CNN
 # Pytorch has many pre-trained models that can be used for transfer learning
 classification_models = torchvision.models.list_models(module=torchvision.models)
 
-if Model_used not in classification_models.extend(extra_models):
+classification_models.extend(extra_models)
+
+if Model_used not in classification_models:
     print(f"Model {Model_used} not found")
     print("Available models are:")
     print(classification_models.extend(extra_models))
@@ -47,7 +49,8 @@ wandb.init(
     "architecture": "my_trained_model",
     "dataset": "YourDataset",
     "epochs": Number_epochs,
-    }
+    },
+    dir=str(root_dir)  # o cualquier otra ruta que desees
 )
 
 
