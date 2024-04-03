@@ -30,7 +30,7 @@ def main():
     model_option = st.selectbox("Selecciona el modelo a utilizar", Disp_Models)
 
     # Seleccionar el modelo a utilizar
-    model_path = Models_paths[model_option]
+    model_path = Models_paths[Disp_Models.index(model_option)]
 
     used_classes = num_classes
     
@@ -40,8 +40,8 @@ def main():
 
     # Change the model name according to the model used
 
-    if model_path.split('models')[1].split('-')[0] == 'resnet50':
-        model_used = torchvision.models.resnet50(weights='DEFAULT', num_classes=used_classes)
+    if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
+        model_used = torchvision.models.resnet50(weights='DEFAULT')
     else:
         raise ValueError(f"Model {Models_paths} not supported")
     
