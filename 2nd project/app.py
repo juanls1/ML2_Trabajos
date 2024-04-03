@@ -37,18 +37,21 @@ def main():
     if image_file is not None:
         # Preprocesar la imagen
         image = Image.open(image_file)
+
         streamlit_transforms = torchvision.transforms.Compose([
             torchvision.transforms.Resize((224, 224)),
             torchvision.transforms.ToTensor(),
             torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
         ])
 
-        streamlit_image = torchvision.datasets.ImageFolder(image, transform=streamlit_transforms)
-
-        streamlit_loader = DataLoader(streamlit_image, batch_size=1, shuffle=False)
+        # Convertir la imagen a tensor
+        image_tensor = streamlit_transforms(image).unsqueeze(0)
+        
+        # Crear un DataLoader con la imagen
+        data_loader = DataLoader([image_tensor])
         
         # Realizar la predicción
-        predicted_labels = model.predict(streamlit_loader)
+        predicted_labels = model.predict(data_loader)
 
         predicted_label = torch.argmax(predicted_labels, dim=1).item()
 

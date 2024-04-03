@@ -1,6 +1,6 @@
 from cnn import load_data
 
-# Load data and model 
+# Load data 
 train_dir = 'C:/Users/juanl/Documents/Master/2o cuatri/ML2/Codes/Entregas/ML2_Trabajos/2nd project/data/training'
 valid_dir = 'C:/Users/juanl/Documents/Master/2o cuatri/ML2/Codes/Entregas/ML2_Trabajos/2nd project/data/validation'
 
