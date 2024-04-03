@@ -155,10 +155,10 @@ class CNN(nn.Module):
             filename: Name of the file to save the model.
         """
         # If the directory does not exist, create it
-        os.makedirs(os.path.dirname('models/'), exist_ok=True)
+        os.makedirs(os.path.dirname('2nd project/models/'), exist_ok=True)
 
         # Full path to the model
-        filename = os.path.join('models', filename)
+        filename = os.path.join('2nd project/models', filename)
 
         # Save the model
         torch.save(self.state_dict(), filename+'.pt')
