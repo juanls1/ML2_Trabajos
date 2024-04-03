@@ -3,7 +3,6 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
-import torchvision
 
 # Obtener la ruta absoluta de la carpeta que contiene el módulo
 root_dir = Path(__file__).resolve().parent.parent.parent
@@ -11,8 +10,6 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from src.utils.cnn import load_model_weights
-from src.utils.cnn import CNN
 from config.constants import Figsize, Fontsize
 
 # Visualize a few images
@@ -35,13 +32,6 @@ def show_images_grid(images, titles, rows, cols):
         ax.axis('off')
     plt.tight_layout()
     plt.show()
-
-
-def load_model(model_path, classes):
-    model_weights = load_model_weights(model_path)
-    model = CNN(torchvision.models.resnet50(weights='DEFAULT'), classes)
-    model.load_state_dict(model_weights)
-    return model
 
 
 # Define un Dataset personalizado para cargar la imagen

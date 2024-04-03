@@ -3,6 +3,7 @@ from pathlib import Path
 import streamlit as st
 from PIL import Image
 import torch
+import torchvision
 from torch.utils.data import DataLoader
 from torchvision import transforms
 
@@ -13,7 +14,8 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(root_dir))
 
 from src.utils.data_loader import num_classes, classnames
-from src.utils.local_functs import CustomImageDataset, load_model
+from src.utils.cnn import load_model_weights, CNN
+from src.utils.local_functs import CustomImageDataset
 from config.constants import Images_size, Images_types, Disp_Models, Models_paths
 
 
@@ -34,7 +36,18 @@ def main():
     
     # Cargar el modelo
 
-    model = load_model(model_path, used_classes)
+    model_weights = load_model_weights(model_path)
+
+    # Change the model name according to the model used
+
+    if model_path.split('models')[1].split('-')[0] == 'resnet50':
+        model_used = torchvision.models.resnet50(weights='DEFAULT', num_classes=used_classes)
+    else:
+        raise ValueError(f"Model {Models_paths} not supported")
+    
+    model = CNN(model_used, used_classes)
+    
+    model.load_state_dict(model_weights)
     
     if image_file is not None:
         # Preprocesar la imagen
