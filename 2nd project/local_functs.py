@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import torch
+from torch.utils.data import Dataset
 
 # Visualize a few images
 def imshow(inp, title=None):
@@ -24,21 +24,16 @@ def show_images_grid(images, titles, rows, cols):
     plt.show()
 
 
+# Define un Dataset personalizado para cargar la imagen
+class CustomImageDataset(Dataset):
+    def __init__(self, image, transform=None):
+        self.image = image
+        self.transform = transform
 
-def preprocess_image(data_loader):
-    """Preprocess images from the given data loader.
+    def __len__(self):
+        return 1  # Solo hay una imagen en la carpeta
 
-    Args:
-        data_loader: DataLoader with the images to preprocess.
-
-    Returns:
-        preprocessed_images: List of preprocessed images.
-    """
-    preprocessed_images = []
-    for images, _ in data_loader:
-        # Resize image to 224x224 (required by ResNet50)
-        resized_images = torch.nn.functional.interpolate(images, size=(224, 224), mode='bilinear', align_corners=False)
-        # Convert images to numpy arrays
-        image_arrays = resized_images.numpy()
-        preprocessed_images.extend(image_arrays)
-    return preprocessed_images
+    def __getitem__(self, idx):
+        if self.transform:
+            image = self.transform(self.image)
+        return image, 0  # Establece la etiqueta en 0 para todas las imágenes

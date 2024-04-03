@@ -3,9 +3,11 @@ from PIL import Image
 import torch
 from cnn import CNN
 import torchvision
-from data_loader import num_classes
+from data_loader import num_classes, classnames
 from cnn import load_model_weights
 from torch.utils.data import DataLoader
+from local_functs import CustomImageDataset
+from torchvision import transforms
 
 def load_model(model_path, classes):
     model_weights = load_model_weights(model_path)
@@ -38,26 +40,33 @@ def main():
         # Preprocesar la imagen
         image = Image.open(image_file)
 
-        streamlit_transforms = torchvision.transforms.Compose([
-            torchvision.transforms.Resize((224, 224)),
-            torchvision.transforms.ToTensor(),
-            torchvision.transforms.Normalize(mean=[0.5], std=[0.5])
-        ])
+        img_size = 224
 
-        # Convertir la imagen a tensor
-        image_tensor = streamlit_transforms(image).unsqueeze(0)
-        
-        # Crear un DataLoader con la imagen
-        data_loader = DataLoader([image_tensor])
+        streamlit_transforms = transforms.Compose([
+                transforms.Resize((img_size, img_size)),
+                transforms.Grayscale(num_output_channels=3),  # Convertir a RGB si es necesario
+                transforms.ToTensor() 
+            ])
+
+
+
+        # Crea una instancia del Dataset personalizado
+        streamlit_data = CustomImageDataset(image, transform=streamlit_transforms)
+
+        # Crea un DataLoader con el Dataset
+        streamlit_loader = DataLoader(streamlit_data, batch_size=1, shuffle=False)
         
         # Realizar la predicción
-        predicted_labels = model.predict(data_loader)
+        predicted_labels = model.predict(streamlit_loader)
 
-        predicted_label = torch.argmax(predicted_labels, dim=1).item()
+        predicted_label = predicted_labels[0]
 
-        # Mostrar la imagen y la predicción
+        class_name = classnames[predicted_label]
+
+        # Mostrar la predicción y la imagen
+        st.write(f'Clase predicha: {class_name}')
         st.image(image_file, caption='Imagen cargada', use_column_width=True)
-        st.write(f'Clase predicha: {predicted_label}')
+        
 
 if __name__ == "__main__":
     main()

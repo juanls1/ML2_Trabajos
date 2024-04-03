@@ -1,6 +1,4 @@
-import json
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 import torch
 import torchvision
@@ -8,7 +6,6 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from tempfile import TemporaryDirectory
-import json
 
 class CNN(nn.Module):
     """Convolutional Neural Network model for image classification."""
@@ -147,22 +144,6 @@ class CNN(nn.Module):
         self.eval()
         predicted_labels = []
         for images, _ in data_loader:
-            outputs = self(images)
-            predicted_labels.extend(outputs.argmax(1).tolist())
-        return predicted_labels
-
-    def predict_photo(self, data_loader):
-        """Predict the classes of the images in the data loader.
-
-        Args:
-            data_loader: DataLoader with the images to predict.
-
-        Returns:
-            predicted_labels: Predicted classes.
-        """
-        self.eval()
-        predicted_labels = []
-        for images in data_loader:
             outputs = self(images)
             predicted_labels.extend(outputs.argmax(1).tolist())
         return predicted_labels
