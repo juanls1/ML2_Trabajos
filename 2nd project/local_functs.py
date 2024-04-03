@@ -1,6 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset
+from cnn import load_model_weights
+from cnn import CNN
+import torchvision
 
 # Visualize a few images
 def imshow(inp, title=None):
@@ -22,6 +25,13 @@ def show_images_grid(images, titles, rows, cols):
         ax.axis('off')
     plt.tight_layout()
     plt.show()
+
+
+def load_model(model_path, classes):
+    model_weights = load_model_weights(model_path)
+    model = CNN(torchvision.models.resnet50(weights='DEFAULT'), classes)
+    model.load_state_dict(model_weights)
+    return model
 
 
 # Define un Dataset personalizado para cargar la imagen

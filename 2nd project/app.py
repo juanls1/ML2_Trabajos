@@ -1,23 +1,16 @@
 import streamlit as st
 from PIL import Image
 import torch
-from cnn import CNN
-import torchvision
 from data_loader import num_classes, classnames
-from cnn import load_model_weights
 from torch.utils.data import DataLoader
-from local_functs import CustomImageDataset
+from local_functs import CustomImageDataset, load_model
 from torchvision import transforms
 
-def load_model(model_path, classes):
-    model_weights = load_model_weights(model_path)
-    model = CNN(torchvision.models.resnet50(weights='DEFAULT'), classes)
-    model.load_state_dict(model_weights)
-    return model
+
 
 def main():
-    st.title("Detección de objetos")
-    st.markdown("¡Bienvenidos a la aplicación web de detección de objetos del grupo Lechuga!")
+    st.title("Clasificación de imágenes con CNNs")
+    st.markdown("¡Bienvenidos a la aplicación web de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!")
     
     # Widget para cargar una imagen
     image_file = st.file_uploader("Cargar imagen", type=["jpg", "jpeg", "png"])
