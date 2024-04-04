@@ -4,7 +4,7 @@ from pathlib import Path
 import os
 
 # Obtener la ruta absoluta de la carpeta que contiene el módulo
-root_dir = Path(__file__).resolve().parent
+root_dir = Path(__file__).resolve().parent.parent
 
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
