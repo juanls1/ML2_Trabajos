@@ -1,4 +1,4 @@
-# 2nd project Folder: ENTREGA CNN (TENIA OTRO NOMBRE, algo de una empresa de imagen)
+# 2nd project Folder: CANONIST.IA (ENTREGA CNN)
 
 Hay que hacerlo, explicando los .py que tenemos y para qué sirven, el notebook, los datos, etc.
 

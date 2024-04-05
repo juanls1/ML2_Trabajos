@@ -40,7 +40,7 @@ df_orig_Irrad['FECHA'] =  s.dt.date
 
 ```
 
-# 2nd project Folder: ENTREGA CNN (TENIA OTRO NOMBRE)
+# 2nd project Folder: CANONIST.IA (ENTREGA CNN)
 
 Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases hecha:
 

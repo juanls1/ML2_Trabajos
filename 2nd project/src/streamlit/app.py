@@ -22,7 +22,7 @@ from config.constants import Images_size, Images_types, Disp_Models, Models_path
 def main():
     st.set_page_config(page_title="ML2 - CNN", layout="centered")
     st.title("Clasificación de imágenes con CNNs")
-    st.markdown("¡Bienvenidos a la aplicación web de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!")
+    st.markdown("¡Bienvenidos a la aplicación web Canonist.ia de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!")
     
     # Widget para cargar una imagen
     image_file = st.file_uploader("### Cargar imagen", type=Images_types)
