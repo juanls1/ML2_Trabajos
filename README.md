@@ -44,8 +44,6 @@ df_orig_Irrad['FECHA'] =  s.dt.date
 
 Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases hecha:
 
- + Ordenar y hacer nuestro el código presente (es copia de la 3a práctica, igual que lo de cnn.py)
-
  + Usar otros modelos preentrenados (Tampoco se tienen que probar todos, pero hacer research y explicar un poco cada uno, y por qué escogemos y probamos los que escojamos)
 
  + Decongelar más capas (aprende más de nuestros datos) (en cnn.py). Esto es fine tunning, entrenar el modelo con nuestros datos y que se especialice
@@ -67,6 +65,8 @@ Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases h
  + Cambiar learning rate y los pesos
 
  + ¿Grid search? Quizás tarda demasiado
+
+ + Cargar un modelo preentrenado de HuggingFace más novedoso
 
 
 

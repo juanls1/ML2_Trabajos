@@ -29,6 +29,9 @@ if Model_used not in classification_models:
     print(classification_models.extend(extra_models))
     sys.exit()
 
+else:
+    model_used = torchvision.models.__dict__[Model_used](pretrained=True)
+
 # Change the model name according to the model used
 if Model_used == 'resnet50':
     model_used = torchvision.models.resnet50(weights='DEFAULT')
