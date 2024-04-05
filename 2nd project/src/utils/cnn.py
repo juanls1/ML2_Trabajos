@@ -7,10 +7,22 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from tempfile import TemporaryDirectory
 
+# Constants necessary for the project
+import sys
+from pathlib import Path
+
+# Obtener la ruta absoluta de la carpeta que contiene el módulo
+root_dir = Path(__file__).resolve().parent.parent.parent
+
+# Agregar la ruta de la carpeta al sys.path
+sys.path.append(str(root_dir))
+
+from config.constants import Unfreezed_layers
+
 class CNN(nn.Module):
     """Convolutional Neural Network model for image classification."""
     
-    def __init__(self, base_model, num_classes, unfreezed_layers=0):
+    def __init__(self, base_model, num_classes, unfreezed_layers=Unfreezed_layers):
         """CNN model initializer.
 
         Args:

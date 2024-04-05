@@ -33,7 +33,7 @@ Fontsize = 8
 
 # Constants for loading data (they affect the performance and functioning of the model)
 
-Batch_size = 32 
+Batch_size = 32  # 2985 images in the training set, 1500 in the validation set
 Images_size = 224  
 
 # ResNet50: 224x224 images
@@ -55,6 +55,7 @@ classification_models = ['alexnet','convnext_base','convnext_large','convnext_sm
                          'vit_b_32','vit_h_14','vit_l_16','vit_l_32','wide_resnet101_2','wide_resnet50_2'] # Obviously we do not have to run all. Do a research, test the bests
 Model_used = 'resnet50'
 Learning_rate = 1e-5
+Unfreezed_layers = 0
 Number_epochs = 3
 Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'

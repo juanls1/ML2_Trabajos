@@ -30,14 +30,7 @@ if Model_used not in classification_models:
     sys.exit()
 
 else:
-    model_used = torchvision.models.__dict__[Model_used](pretrained=True)
-
-# Change the model name according to the model used
-if Model_used == 'resnet50':
-    model_used = torchvision.models.resnet50(weights='DEFAULT')
-else:
-    raise ValueError(f"Model {Model_used} not supported")
-
+    model_used = torchvision.models.__dict__[Model_used](weights='DEFAULT')
 
 # Inicialización de wandb
 
