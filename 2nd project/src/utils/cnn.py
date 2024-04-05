@@ -17,7 +17,7 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.constants import Unfreezed_layers
+from config.variables import Unfreezed_layers
 
 class CNN(nn.Module):
     """Convolutional Neural Network model for image classification."""

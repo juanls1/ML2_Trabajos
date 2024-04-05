@@ -9,7 +9,7 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(root_dir))
 
 from src.utils.cnn import load_data
-from config.constants import Batch_size, Images_size
+from config.variables import Batch_size, Images_size
 
 # Load data 
 train_dir = os.path.join(root_dir, 'data', 'training')

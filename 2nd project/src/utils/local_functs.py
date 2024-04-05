@@ -10,7 +10,7 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.constants import Figsize, Fontsize
+from config.variables import Figsize, Fontsize
 
 # Visualize a few images
 def imshow(inp, title=None):

@@ -11,7 +11,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.constants import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name
+from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name, Max_iterations_change
 from src.utils.data_loader import num_classes, train_loader
 from src.utils.cnn import CNN
 
@@ -67,8 +67,11 @@ if Optimizer == 'Adam':
 else:
     raise ValueError(f'Optimizer {Optimizer} not supported')
 
-# Entrenamiento del modelo
+# Define un contador para el número máximo de iteraciones sin cambio en error y precisión
+max_iterations_without_change = Max_iterations_change
+iterations_without_change = 0
 
+# Entrenamiento del modelo
 for epoch in range(Number_epochs):
     running_loss = 0.0
     correct = 0
@@ -100,6 +103,22 @@ for epoch in range(Number_epochs):
 
     # Log metrics to W&B
     wandb.log({"train_loss": train_loss, "train_accuracy": train_accuracy})
+
+    # Verifica si el error y la precisión no cambian
+    if epoch > 0:
+        if train_loss == prev_loss and train_accuracy == prev_accuracy:
+            iterations_without_change += 1
+        else:
+            iterations_without_change = 0
+
+        # Si no hay cambio durante un número específico de iteraciones, termina la ejecución
+        if iterations_without_change >= max_iterations_without_change:
+            print("El error y la precisión no han cambiado en las últimas iteraciones. Terminando la ejecución.")
+            break
+
+    # Guarda el error y la precisión de esta iteración para compararlos en la siguiente
+    prev_loss = train_loss
+    prev_accuracy = train_accuracy
 
 # Guardado del modelo
 model.save(Model_name)

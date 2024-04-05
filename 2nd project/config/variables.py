@@ -33,7 +33,7 @@ Fontsize = 8
 
 # Constants for loading data (they affect the performance and functioning of the model)
 
-Batch_size = 32  # 2985 images in the training set, 1500 in the validation set
+Batch_size = 128  # 2985 images in the training set, 1500 in the validation set
 Images_size = 224  
 
 # ResNet50: 224x224 images
@@ -43,6 +43,7 @@ Images_size = 224
 
 # Constants used for the model     (model_training.py)
 
+Max_iterations_change = 5
 extra_models = ['personal_cnn'] # It has to be done. A cnn from scratch. If we have more models, they will be added here
 classification_models = ['alexnet','convnext_base','convnext_large','convnext_small','convnext_tiny','densenet121','densenet161','densenet169','densenet201',
                          'efficientnet_b0','efficientnet_b1','efficientnet_b2','efficientnet_b3','efficientnet_b4','efficientnet_b5','efficientnet_b6','efficientnet_b7',
@@ -54,20 +55,20 @@ classification_models = ['alexnet','convnext_base','convnext_large','convnext_sm
                          'swin_s','swin_t','swin_v2_b','swin_v2_s','swin_v2_t','vgg11','vgg11_bn','vgg13','vgg13_bn','vgg16','vgg16_bn','vgg19','vgg19_bn','vit_b_16',
                          'vit_b_32','vit_h_14','vit_l_16','vit_l_32','wide_resnet101_2','wide_resnet50_2'] # Obviously we do not have to run all. Do a research, test the bests
 Model_used = 'resnet50'
-Learning_rate = 1e-5
-Unfreezed_layers = 0
-Number_epochs = 3
+Learning_rate = 1e-4
+Unfreezed_layers = 3
+Number_epochs = 50
 Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
-Model_name = 'resnet50-3epoch-LR1e-5' # Name of the model to save
+Model_name = f"{Model_used}-LR: {Learning_rate}-NE: {Number_epochs}-UL: {Unfreezed_layers}-C: {Criterion}-O: {Optimizer}" # Name of the model to save
 
 
 
 # Constants used for the prediction  (visualization.ipynb)
 
-Model_loaded = 'resnet50-1epoch' # Name of the model to load
-Model_used_load = 'resnet50' # Model used for the loaded model
+Model_loaded = Model_name # Name of the model to load
+Model_used_load = Model_used # Model used for the loaded model
 
 
 
