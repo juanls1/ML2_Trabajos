@@ -20,14 +20,15 @@ from config.constants import Images_size, Images_types, Disp_Models, Models_path
 
 
 def main():
+    st.set_page_config(page_title="ML2 - CNN", layout="centered")
     st.title("Clasificación de imágenes con CNNs")
     st.markdown("¡Bienvenidos a la aplicación web de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!")
     
     # Widget para cargar una imagen
-    image_file = st.file_uploader("Cargar imagen", type=Images_types)
+    image_file = st.file_uploader("### Cargar imagen", type=Images_types)
     
     # Selección del modelo
-    model_option = st.selectbox("Selecciona el modelo a utilizar", Disp_Models)
+    model_option = st.selectbox("### Selecciona el modelo a utilizar", Disp_Models)
 
     # Seleccionar el modelo a utilizar
     model_path = Models_paths[Disp_Models.index(model_option)]
@@ -43,7 +44,7 @@ def main():
     if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
         model_used = torchvision.models.resnet50(weights='DEFAULT')
     else:
-        raise ValueError(f"Model {Models_paths} not supported")
+        raise ValueError(f"#### Model {Models_paths} not supported")
     
     model = CNN(model_used, used_classes)
     
@@ -76,7 +77,7 @@ def main():
         class_name = classnames[predicted_label]
 
         # Mostrar la predicción y la imagen
-        st.write(f'Clase predicha: {class_name}')
+        st.write(f'### Clase predicha: {class_name}')
         st.image(image_file, caption='Imagen cargada', use_column_width=True)
         
 
