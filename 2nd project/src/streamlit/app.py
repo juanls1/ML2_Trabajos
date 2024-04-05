@@ -78,7 +78,7 @@ def main():
 
         # Mostrar la predicción y la imagen
         st.write(f'### Clase predicha: {class_name}')
-        st.image(image_file, caption='Imagen cargada', use_column_width=True)
+        st.image(image_file, caption='Imagen cargada', use_column_width=False)
         
 
 if __name__ == "__main__":
