@@ -12,9 +12,12 @@ root_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(root_dir))
 
 from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name, Max_iterations_change
-from src.utils.data_loader import num_classes, train_loader
+from src.utils.data_loader import num_classes, train_loader, valid_loader
 from src.utils.cnn import CNN
 
+import time
+
+start_time = time.time()
 
 # Carga y elección del modelo usado
 
@@ -77,6 +80,8 @@ for epoch in range(Number_epochs):
     correct = 0
     total = 0
 
+    # Entrenamiento
+    model.train()  # Poner el modelo en modo de entrenamiento
     for images, labels in train_loader:
         # Zero gradient
         optimizer.zero_grad()
@@ -104,6 +109,30 @@ for epoch in range(Number_epochs):
     # Log metrics to W&B
     wandb.log({"train_loss": train_loss, "train_accuracy": train_accuracy})
 
+    # Calcular el accuracy y la pérdida en el conjunto de validación
+    valid_running_loss = 0.0
+    valid_correct = 0
+    valid_total = 0
+
+    model.eval()  # Poner el modelo en modo de evaluación
+
+    with torch.no_grad():
+        for images, labels in valid_loader:
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            valid_running_loss += loss.item()
+
+            _, predicted = torch.max(outputs, 1)
+            valid_total += labels.size(0)
+            valid_correct += (predicted == labels).sum().item()
+
+    # Calcular accuracy y loss en el conjunto de validación
+    valid_loss = valid_running_loss / len(valid_loader)
+    valid_accuracy = valid_correct / valid_total
+
+    # Registrar métricas en W&B
+    wandb.log({"valid_loss": valid_loss, "valid_accuracy": valid_accuracy})
+
     # Verifica si el error y la precisión no cambian
     if epoch > 0:
         if train_loss == prev_loss and train_accuracy == prev_accuracy:
@@ -125,3 +154,7 @@ model.save(Model_name)
 
 # Finaliza el run de W&B
 wandb.finish()
+
+stop_time = time.time()
+
+print(f"Training finished in {stop_time - start_time} seconds")
