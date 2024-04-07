@@ -47,15 +47,18 @@ class CNN(nn.Module):
 
         # Add a new softmax output layer
         self.fc = nn.Sequential(
-            nn.Linear(self.base_model.fc.in_features, 1024),
+            nn.Linear(self.base_model.classifier[-1].in_features, 1024),
             nn.ReLU(),
             nn.Dropout(0.2),
             nn.Linear(1024, num_classes),
             nn.Softmax(dim=1)
         )
 
-        # Replace the last layer of the base model
-        self.base_model.fc = nn.Identity()
+        # Replace the last layer of the base model (vgg) (change every .fc to .classifier[-1] for vgg)
+        self.base_model.classifier[-1] = nn.Identity()
+
+        # Replace the last layer of the base model (resnet)
+        # self.base_model.fc = nn.Identity()
 
     def forward(self, x):
         """Forward pass of the model.

@@ -1,0 +1,45 @@
+{
+    "os": "Windows-10-10.0.22631-SP0",
+    "python": "3.11.5",
+    "heartbeatAt": "2024-04-06T17:08:38.386688",
+    "startedAt": "2024-04-06T17:08:37.429488",
+    "docker": null,
+    "cuda": null,
+    "args": [],
+    "state": "running",
+    "program": "c:\\Users\\juanl\\Documents\\Master\\2o cuatri\\ML2\\Codes\\Entregas\\ML2_Trabajos\\2nd project\\src\\model_training.py",
+    "codePathLocal": "Codes\\Entregas\\ML2_Trabajos\\2nd project\\src\\model_training.py",
+    "codePath": "Codes\\Entregas\\ML2_Trabajos\\2nd project\\src\\model_training.py",
+    "git": {
+        "remote": null,
+        "commit": null
+    },
+    "email": "202308780@alu.comillas.edu",
+    "root": "C:/Users/juanl/Documents/Master/2o cuatri/ML2",
+    "host": "Juan",
+    "username": "juanl",
+    "executable": "C:\\Users\\juanl\\Documents\\Master\\2o cuatri\\ML2\\Codes\\Entregas\\ML2_Trabajos\\2nd project\\ML_deep_learning_Entrega\\Scripts\\python.exe",
+    "cpu_count": 10,
+    "cpu_count_logical": 16,
+    "cpu_freq": {
+        "current": 2400.0,
+        "min": 0.0,
+        "max": 2400.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2400.0,
+            "min": 0.0,
+            "max": 2400.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 842.9912071228027,
+            "used": 174.02603149414062
+        }
+    },
+    "memory": {
+        "total": 31.710731506347656
+    }
+}

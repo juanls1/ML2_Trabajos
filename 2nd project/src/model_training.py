@@ -70,9 +70,11 @@ if Optimizer == 'Adam':
 else:
     raise ValueError(f'Optimizer {Optimizer} not supported')
 
-# Define un contador para el número máximo de iteraciones sin cambio en error y precisión
-max_iterations_without_change = Max_iterations_change
-iterations_without_change = 0
+# Define un contador para el número máximo de épocas sin mejora en el entrenamiento
+max_epochs_no_improve = 5  # Por ejemplo, puedes ajustar este valor según tus necesidades
+epochs_no_improve = 0
+best_train_loss = float('inf')  # Inicializa la mejor pérdida en la validación como infinito positivo
+best_train_acc = 0.0  # Inicializa la mejor precisión en la validación como 0.0
 
 # Entrenamiento del modelo
 for epoch in range(Number_epochs):
@@ -133,21 +135,16 @@ for epoch in range(Number_epochs):
     # Registrar métricas en W&B
     wandb.log({"valid_loss": valid_loss, "valid_accuracy": valid_accuracy})
 
-    # Verifica si el error y la precisión no cambian
-    if epoch > 0:
-        if train_loss == prev_loss and train_accuracy == prev_accuracy:
-            iterations_without_change += 1
-        else:
-            iterations_without_change = 0
+    # Comprobar si hay mejora en la pérdida en la validación
+    if train_loss < best_train_loss:
 
-        # Si no hay cambio durante un número específico de iteraciones, termina la ejecución
-        if iterations_without_change >= max_iterations_without_change:
-            print("El error y la precisión no han cambiado en las últimas iteraciones. Terminando la ejecución.")
-            break
-
-    # Guarda el error y la precisión de esta iteración para compararlos en la siguiente
-    prev_loss = train_loss
-    prev_accuracy = train_accuracy
+        best_train_loss = train_loss
+        epochs_no_improve = 0  # Reinicia el contador de épocas sin mejora
+    elif train_accuracy > best_train_acc:
+        best_train_acc = train_accuracy
+        epochs_no_improve = 0
+    else:
+        epochs_no_improve += 1
 
 # Guardado del modelo
 model.save(Model_name)
