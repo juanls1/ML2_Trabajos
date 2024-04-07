@@ -16,7 +16,7 @@ sys.path.append(str(root_dir))
 from src.utils.data_loader import num_classes, classnames
 from src.utils.cnn import load_model_weights, CNN
 from src.utils.local_functs import CustomImageDataset
-from config.constants import Images_size, Images_types, Disp_Models, Models_paths
+from config.variables import Images_size, Images_types, Disp_Models, Models_paths
 
 
 def main():
