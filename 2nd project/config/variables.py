@@ -54,10 +54,10 @@ classification_models = ['alexnet','convnext_base','convnext_large','convnext_sm
                          'resnext50_32x4d','shufflenet_v2_x0_5','shufflenet_v2_x1_0','shufflenet_v2_x1_5','shufflenet_v2_x2_0','squeezenet1_0','squeezenet1_1','swin_b',
                          'swin_s','swin_t','swin_v2_b','swin_v2_s','swin_v2_t','vgg11','vgg11_bn','vgg13','vgg13_bn','vgg16','vgg16_bn','vgg19','vgg19_bn','vit_b_16',
                          'vit_b_32','vit_h_14','vit_l_16','vit_l_32','wide_resnet101_2','wide_resnet50_2'] # Obviously we do not have to run all. Do a research, test the bests
-Model_used = 'vgg19'
+Model_used = 'vgg19_bn'
 Learning_rate = 1e-4
-Unfreezed_layers = 5
-Number_epochs = 50
+Unfreezed_layers = 3
+Number_epochs = 15
 Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
