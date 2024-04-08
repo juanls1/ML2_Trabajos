@@ -75,9 +75,9 @@ Model_used_load = Model_used # Model used for the loaded model
 # Constants used for the streamlit app
 
 Images_types = ['png', 'jpg', 'jpeg']
-Disp_Models = ["Modelo 1 (Resnet50, 1 epoch, 1e-4 LR, 0 Unfreezed Layers, Adam, Crossentropy, Batch size 32)", 
-               "Modelo 2 (Resnet50, 3 epochs, 1e-5 LR, 0 Unfreezed Layers, Adam, Crossentropy, Batch size 32)",
-               "Modelo 3 (Resnet50, 50 epochs, 1e-4 LR, 3 Unfreezed Layers, Adam, Crossentropy, Batch size 128)"]
+Disp_Models = ["Modelo 1", 
+               "Modelo 2",
+               "Modelo 3 (Good Model)"]
 Models_dir = os.path.join(root_dir, 'models')
 Models_paths = [os.path.join(Models_dir, 'resnet50-1epoch'), 
                 os.path.join(Models_dir, 'resnet50-3epoch-LR1e-5'),
