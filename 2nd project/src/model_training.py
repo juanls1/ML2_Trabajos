@@ -11,7 +11,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name, Max_iterations_change
+from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name, Max_iterations_change, threshold
 from src.utils.data_loader import num_classes, train_loader, valid_loader
 from src.utils.cnn import CNN
 
@@ -38,19 +38,19 @@ else:
 # Inicialización de wandb
 
 # start a new wandb run to track this script
-wandb.init(
-    # set the wandb project where this run will be logged
-    project="ML2-CNN-PROJECT",
+# wandb.init(
+#     # set the wandb project where this run will be logged
+#     project="ML2-CNN-PROJECT",
     
-    # track hyperparameters and run metadata
-    config={
-    "learning_rate": Learning_rate,
-    "architecture": "my_trained_model",
-    "dataset": "YourDataset",
-    "epochs": Number_epochs,
-    },
-    dir=str(root_dir)  # o cualquier otra ruta que desees
-)
+#     # track hyperparameters and run metadata
+#     config={
+#     "learning_rate": Learning_rate,
+#     "architecture": "my_trained_model",
+#     "dataset": "YourDataset",
+#     "epochs": Number_epochs,
+#     },
+#     dir=str(root_dir)  # o cualquier otra ruta que desees
+# )
 
 
 # Instancia el modelo de CNN
@@ -71,7 +71,7 @@ else:
     raise ValueError(f'Optimizer {Optimizer} not supported')
 
 # Define un contador para el número máximo de épocas sin mejora en el entrenamiento
-max_epochs_no_improve = 5  # Por ejemplo, puedes ajustar este valor según tus necesidades
+max_epochs_no_improve = Max_iterations_change  
 epochs_no_improve = 0
 best_train_loss = float('inf')  # Inicializa la mejor pérdida en la validación como infinito positivo
 best_train_acc = 0.0  # Inicializa la mejor precisión en la validación como 0.0
@@ -100,16 +100,36 @@ for epoch in range(Number_epochs):
         running_loss += loss.item()
 
         # Track accuracy
-        _, predicted = torch.max(outputs, 1)
+
+        # Get the probabilities and predicted classes
+        top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
+
+        # Check if the difference between the top two classes is less than threshold
+        diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
+
+        if diff < threshold:
+            class1 = top_classes[:, 0]
+            prob1 = top_probs[:, 0]
+            class2 = top_classes[:, 1]
+            prob2 = top_probs[:, 1]
+
+            match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
+        
+        else:
+            class1 = top_classes[:, 0]
+            prob1 = top_probs[:, 0]
+
+            match_score = torch.where(class1 == labels, 1.0, 0)
+
         total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+        correct += ((class1 == labels) | (class2 == labels)).sum().item()
 
     # Calculate accuracy and loss
     train_loss = running_loss / len(train_loader)
     train_accuracy = correct / total
 
     # Log metrics to W&B
-    wandb.log({"train_loss": train_loss, "train_accuracy": train_accuracy})
+    # wandb.log({"train_loss": train_loss, "train_accuracy": train_accuracy})
 
     # Calcular el accuracy y la pérdida en el conjunto de validación
     valid_running_loss = 0.0
@@ -124,16 +144,37 @@ for epoch in range(Number_epochs):
             loss = criterion(outputs, labels)
             valid_running_loss += loss.item()
 
-            _, predicted = torch.max(outputs, 1)
+            # Track accuracy
+
+            # Get the probabilities and predicted classes
+            top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
+
+            # Check if the difference between the top two classes is less than threshold
+            diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
+
+            if diff < threshold:
+                class1 = top_classes[:, 0]
+                prob1 = top_probs[:, 0]
+                class2 = top_classes[:, 1]
+                prob2 = top_probs[:, 1]
+
+                match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
+            
+            else:
+                class1 = top_classes[:, 0]
+                prob1 = top_probs[:, 0]
+
+                match_score = torch.where(class1 == labels, 1.0, 0)
+
             valid_total += labels.size(0)
-            valid_correct += (predicted == labels).sum().item()
+            valid_correct += ((class1 == labels) | (class2 == labels)).sum().item()
 
     # Calcular accuracy y loss en el conjunto de validación
     valid_loss = valid_running_loss / len(valid_loader)
     valid_accuracy = valid_correct / valid_total
 
     # Registrar métricas en W&B
-    wandb.log({"valid_loss": valid_loss, "valid_accuracy": valid_accuracy})
+    # wandb.log({"valid_loss": valid_loss, "valid_accuracy": valid_accuracy})
 
     # Comprobar si hay mejora en la pérdida en la validación
     if train_loss < best_train_loss:
@@ -150,7 +191,7 @@ for epoch in range(Number_epochs):
 model.save(Model_name)
 
 # Finaliza el run de W&B
-wandb.finish()
+# wandb.finish()
 
 stop_time = time.time()
 

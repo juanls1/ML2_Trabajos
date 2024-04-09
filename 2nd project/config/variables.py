@@ -60,6 +60,7 @@ Unfreezed_layers = 9
 Number_epochs = 20
 Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'
+threshold = 0.2
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
 Model_name = f"{Model_used}-LR_{Learning_rate}-NE_{Number_epochs}-UL_{Unfreezed_layers}-C_{Criterion}-O_{Optimizer}" # Name of the model to save
 
