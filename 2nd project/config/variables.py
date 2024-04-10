@@ -33,7 +33,7 @@ Fontsize = 8
 
 # Constants for loading data (they affect the performance and functioning of the model)
 
-Batch_size = 128  # 2985 images in the training set, 1500 in the validation set
+Batch_size = 16  # 2985 images in the training set, 1500 in the validation set
 Images_size = 224  
 
 # ResNet50: 224x224 images
