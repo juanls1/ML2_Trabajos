@@ -57,13 +57,15 @@ wandb.init(
 
 # Carga de parámetros
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 model = CNN(model_used, num_classes)
 
+model.to(device)
+
 # Define el optimizador y la función de pérdida
-if Criterion == 'CrossEntropyLoss':
-    criterion = nn.CrossEntropyLoss()
-else:
-    raise ValueError(f'Criterion {Criterion} not supported')
+criterion = nn.CrossEntropyLoss()
+criterion.to(device)
 
 if Optimizer == 'Adam':
     optimizer = torch.optim.Adam(model.parameters(), lr=Learning_rate)
@@ -82,9 +84,11 @@ for epoch in range(Number_epochs):
     correct = 0
     total = 0
 
-    # Entrenamiento
     model.train()  # Poner el modelo en modo de entrenamiento
     for images, labels in train_loader:
+        images, labels = images.to(device), labels.to(device)
+
+        
         # Zero gradient
         optimizer.zero_grad()
 
@@ -120,6 +124,7 @@ for epoch in range(Number_epochs):
 
     with torch.no_grad():
         for images, labels in valid_loader:
+            images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
             valid_running_loss += loss.item()
@@ -147,7 +152,7 @@ for epoch in range(Number_epochs):
         epochs_no_improve += 1
 
 # Guardado del modelo
-model.save(Model_name)
+torch.save(model.state_dict(), Model_name)
 
 # Finaliza el run de W&B
 wandb.finish()
