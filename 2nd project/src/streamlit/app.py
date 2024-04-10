@@ -47,6 +47,25 @@ def main():
             Disp_Models,
             help="Selecciona el modelo de CNN que deseas usar para clasificar tu imagen."
         )
+
+        model_path = Models_paths[Disp_Models.index(model_option)]
+
+        used_classes = num_classes
+        
+        # Cargar el modelo
+
+        model_weights = load_model_weights(model_path)
+
+        # Change the model name according to the model used
+
+        if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
+            model_used = torchvision.models.resnet50(weights='DEFAULT')
+        else:
+            raise ValueError(f"#### Model {Models_paths} not supported")
+        
+        model = CNN(model_used, used_classes)
+        
+        model.load_state_dict(model_weights)
     
     # Carga de imagen y selección de modelo
     with st.container():
@@ -54,10 +73,31 @@ def main():
     
     if image_file is not None:
         with st.spinner('Procesando imagen...'):
-            # Aquí iría todo el proceso de predicción basado en la elección de "Single-class" o "Multi-class"
-            # Imaginemos que obtenemos el nombre de la clase predicha
-            class_name = "Ejemplo de Clase"
-            st.success(f'Clasificación completada: {class_name}')
+            image = Image.open(image_file)
+
+            img_size = Images_size
+
+            streamlit_transforms = transforms.Compose([
+                    transforms.Resize((img_size, img_size)),
+                    transforms.Grayscale(num_output_channels=3),  # Convertir a RGB si es necesario
+                    transforms.ToTensor() 
+                ])
+
+
+            # Crea una instancia del Dataset personalizado
+            streamlit_data = CustomImageDataset(image, transform=streamlit_transforms)
+
+            # Crea un DataLoader con el Dataset
+            streamlit_loader = DataLoader(streamlit_data, batch_size=1, shuffle=False)
+            
+            # Realizar la predicción
+            predicted_labels = model.predict(streamlit_loader)
+
+            predicted_label = predicted_labels[0]
+
+            class_name = classnames[predicted_label]
+
+            st.success(f'Clase predicha: {class_name}')
             st.image(image_file, caption='Imagen Cargada', use_column_width=True)
 
 if __name__ == "__main__":
