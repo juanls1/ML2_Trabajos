@@ -132,6 +132,10 @@ ENV/
 env.bak/
 venv.bak/
 
+# Big Folders and Models
+wandb/
+models/
+
 # Spyder project settings
 .spyderproject
 .spyproject
