@@ -9,6 +9,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
+from src.utils.local_functs import CustomLoss
 
 
 # Constants used for displaying images (visualization.ipynb, training set sample)
@@ -43,7 +44,7 @@ Images_size = 224
 
 # Constants used for the model     (model_training.py)
 
-Max_iterations_change = 5
+Saved_epochs = 5
 extra_models = ['personal_cnn'] # It has to be done. A cnn from scratch. If we have more models, they will be added here
 classification_models = ['alexnet','convnext_base','convnext_large','convnext_small','convnext_tiny','densenet121','densenet161','densenet169','densenet201',
                          'efficientnet_b0','efficientnet_b1','efficientnet_b2','efficientnet_b3','efficientnet_b4','efficientnet_b5','efficientnet_b6','efficientnet_b7',
@@ -60,6 +61,7 @@ Unfreezed_layers = 13
 Number_epochs = 30
 Criterion = 'CrossEntropyLoss'
 Optimizer = 'Adam'
+threshold = 0.2
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
 Model_name = f"{Model_used}-LR_{Learning_rate}-NE_{Number_epochs}-UL_{Unfreezed_layers}-C_{Criterion}-O_{Optimizer}" # Name of the model to save
 

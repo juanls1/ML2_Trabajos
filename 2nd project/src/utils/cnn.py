@@ -6,6 +6,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from tempfile import TemporaryDirectory
+import wandb
 
 # Constants necessary for the project
 import sys
@@ -17,7 +18,7 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.variables import Unfreezed_layers
+from config.variables import Unfreezed_layers, threshold, Saved_epochs
 
 class CNN(nn.Module):
     """Convolutional Neural Network model for image classification."""
@@ -87,12 +88,13 @@ class CNN(nn.Module):
         return x
 
     def train_model(self, 
+                    device,
                     train_loader, 
                     valid_loader, 
                     optimizer, 
                     criterion, 
                     epochs, 
-                    nepochs_to_save=10):
+                    nepochs_to_save=Saved_epochs):
         """Train the model and save the best one based on validation accuracy.
         
         Args:
@@ -109,54 +111,139 @@ class CNN(nn.Module):
         with TemporaryDirectory() as temp_dir:
             best_model_path = os.path.join(temp_dir, 'best_model.pt')
             best_accuracy = 0.0
+            best_score = 0.0
             torch.save(self.state_dict(), best_model_path)
 
-            history = {'train_loss': [], 'train_accuracy': [], 'valid_loss': [], 'valid_accuracy': []}
+            history = {'train_loss': [], 'train_accuracy': [], 'train_score': [], 
+                       'valid_loss': [], 'valid_accuracy': [], 'valid_score': []}
+
+
+            # Entrenamiento del modelo
             for epoch in range(epochs):
-                self.train()
+
                 train_loss = 0.0
                 train_accuracy = 0.0
+                train_score = 0.0
+
+                self.train()  # Poner el modelo en modo de entrenamiento
+
                 for images, labels in train_loader:
+
+                    # Zero gradient
                     optimizer.zero_grad()
+                    images, labels = images.to(device), labels.to(device)
+
+                    # Forward pass
                     outputs = self(images)
                     loss = criterion(outputs, labels)
+
+                    # Backward pass and optimization
                     loss.backward()
                     optimizer.step()
-                    train_loss += loss.item()
-                    train_accuracy += (outputs.argmax(1) == labels).sum().item()
 
+                    # Track training loss
+                    train_loss += loss.item()
+
+                    # Track accuracy (equivalent to train_accuracy += (outputs.argmax(1) == labels).sum().item())
+
+                    # Get the probabilities and predicted classes
+                    top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
+
+                    # Iterar sobre cada foto
+                    for i in range(outputs.shape[0]):
+                        # Calcular la diferencia de probabilidades para la foto actual
+                        diff = torch.abs(top_probs[i, 0] - top_probs[i, 1])
+                        
+                        # Comparar la diferencia con el umbral
+                        if diff < threshold:
+                            class1 = top_classes[i, 0]
+                            class2 = top_classes[i, 1]
+                            train_score += float(torch.where(class1 == labels[i], 0.8, torch.where(class2 == labels[i], 0.6, 0)))
+                        else:
+                            class1 = top_classes[i, 0]
+                            train_score += float(torch.where(class1 == labels[i], 1.0, 0))
+
+                        # Incrementar el contador de predicciones correctas
+                        train_accuracy += ((class1 == labels[i])).sum().item()
+
+
+                # Calculate accuracy and loss
                 train_loss /= len(train_loader)
                 train_accuracy /= len(train_loader.dataset)
+                train_score /= len(train_loader.dataset)
                 history['train_loss'].append(train_loss)
                 history['train_accuracy'].append(train_accuracy)
+                history['train_score'].append(train_score)
 
                 print(f'Epoch {epoch + 1}/{epochs} - '
                       f'Train Loss: {train_loss:.4f}, '
-                      f'Train Accuracy: {train_accuracy:.4f}')
-                
-                
-                self.eval()
-                valid_loss = 0.0
-                valid_accuracy = 0.0
-                for images, labels in valid_loader:
-                    outputs = self(images)
-                    loss = criterion(outputs, labels)
-                    valid_loss += loss.item()
-                    valid_accuracy += (outputs.argmax(1) == labels).sum().item()
+                      f'Train Accuracy: {train_accuracy:.4f}, '
+                      f'Train Score: {train_score:.4f} ')
 
+                #------------------------------------------------------------
+
+                # Calcular el accuracy y la pérdida en el conjunto de validación
+                valid_loss = 0.0
+                valid_accuracy = 0
+                valid_score = 0
+
+                self.eval()  # Poner el modelo en modo de evaluación
+
+                with torch.no_grad():
+
+                    for images, labels in valid_loader:
+
+                        images, labels = images.to(device), labels.to(device)
+                        outputs = self(images)
+                        loss = criterion(outputs, labels)
+                        valid_loss += loss.item()
+
+                        # Track accuracy
+
+                        # Get the probabilities and predicted classes
+                        top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
+
+                        # Iterar sobre cada foto
+                        for i in range(outputs.shape[0]):
+                            # Calcular la diferencia de probabilidades para la foto actual
+                            diff = torch.abs(top_probs[i, 0] - top_probs[i, 1])
+                            
+                            # Comparar la diferencia con el umbral
+                            if diff < threshold:
+                                class1 = top_classes[i, 0]
+                                class2 = top_classes[i, 1]
+                                valid_score += torch.where(class1 == labels[i], 0.8, torch.where(class2 == labels[i], 0.6, 0))
+                            else:
+                                class1 = top_classes[i, 0]
+                                valid_score += torch.where(class1 == labels[i], 1.0, 0)
+
+                            # Incrementar el contador de predicciones correctas
+                            valid_accuracy += ((class1 == labels[i])).sum().item()
+
+
+                # Calcular accuracy y loss en el conjunto de validación
                 valid_loss /= len(valid_loader)
                 valid_accuracy /= len(valid_loader.dataset)
+                valid_score /= len(valid_loader.dataset)
                 history['valid_loss'].append(valid_loss)
                 history['valid_accuracy'].append(valid_accuracy)
+                history['valid_score'].append(valid_score)
 
                 print(f'Epoch {epoch + 1}/{epochs} - '
                         f'Validation Loss: {valid_loss:.4f}, '
-                        f'Validation Accuracy: {valid_accuracy:.4f}')
+                        f'Validation Accuracy: {valid_accuracy:.4f}, '
+                        f'Validation Score: {valid_score:.4f} ')
                 
                 if epoch % nepochs_to_save == 0:
-                    if valid_accuracy > best_accuracy:
+                    if valid_accuracy > best_accuracy or valid_score > best_score:
                         best_accuracy = valid_accuracy
+                        best_score = valid_score
                         torch.save(self.state_dict(), best_model_path)
+
+                # Registrar métricas en W&B
+                wandb.log({"BestModels_train_loss": train_loss, "BestModels_train_accuracy": train_accuracy, "BestModels_train_scores": train_score,
+                        "BestModels_valid_loss": valid_loss, "BestModels_valid_accuracy": valid_accuracy, "BestModels_valid_scores": valid_score})
+
                 
             torch.save(self.state_dict(), best_model_path)    
             self.load_state_dict(torch.load(best_model_path))
@@ -177,7 +264,7 @@ class CNN(nn.Module):
             outputs = self(images)
             predicted_labels.extend(outputs.argmax(1).tolist())
         return predicted_labels
-        
+    
     def save(self, filename: str):
         """Save the model to disk.
 
@@ -217,11 +304,8 @@ class CNN(nn.Module):
 
         plt.show()
 
-    
 
-        
-
-def load_data(train_dir, valid_dir, batch_size, img_size):
+def load_data(train_dir, valid_dir, test_dir, batch_size, img_size):
     """Load and transform the training and validation datasets.
 
     Args:
@@ -247,13 +331,17 @@ def load_data(train_dir, valid_dir, batch_size, img_size):
         transforms.ToTensor() 
     ])
 
+    test_transforms = valid_transforms
+
     train_data = torchvision.datasets.ImageFolder(train_dir, transform=train_transforms)
     valid_data = torchvision.datasets.ImageFolder(valid_dir, transform=valid_transforms)
+    test_data = torchvision.datasets.ImageFolder(test_dir, transform=test_transforms)
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     valid_loader = DataLoader(valid_data, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
-    return train_loader, valid_loader, len(train_data.classes)
+    return train_loader, valid_loader, test_loader, len(train_data.classes)
 
 def load_model_weights(filename: str):
         """Load a model from disk.
