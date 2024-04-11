@@ -6,6 +6,8 @@ import torch
 import torchvision
 from torch.utils.data import DataLoader
 from torchvision import transforms
+import torch.nn.functional as F
+
 
 # Obtener la ruta absoluta de la carpeta que contiene el módulo
 root_dir = Path(__file__).resolve().parent.parent.parent
@@ -49,7 +51,6 @@ def main():
         )
 
         model_path = Models_paths[Disp_Models.index(model_option)]
-        print(model_path)
 
         used_classes = num_classes
         
@@ -91,12 +92,12 @@ def main():
         # Crea un DataLoader con el Dataset
         streamlit_loader = DataLoader(streamlit_data, batch_size=1, shuffle=False)
         
+        model.eval()
         for images, labels in streamlit_loader:
             output = model(images)
-            top_probs, top_classes = torch.topk(output, k=2, dim=1)
-
-        _, predicted = torch.max(output, 1)
-
+            top_probs, top_classes = torch.topk(output, k=15, dim=1)
+            
+        # print(top_probs)
 
         predicted_label_1 = top_classes[0][0].item()
         predicted_label_2 = top_classes[0][1].item()
@@ -107,19 +108,17 @@ def main():
 
         class_name_1 = classnames[predicted_label_1]
         class_name_2 = classnames[predicted_label_2]
-        predicted = classnames[predicted.item()]
-        print(class_name_1, predicted)
 
         diff = prob_1 - prob_2
 
         if classification_mode == "Single-class":
-            st.success(f'### Clase predicha: {class_name_1} (Probabilidad: {round(prob_1, 2)})')
+            st.success(f'### Clase predicha: {class_name_1} (Confianza: {round(prob_1, 5)})')
         else:
             if diff > 0.2:
-                st.success(f'### Clase predicha: {class_name_1}')
+                st.success(f'### Clase predicha: {class_name_1} (Confianza: {round(prob_1, 5)})')
             else:
-                st.success(f'### Clase 1: {class_name_1} (Probabilidad: {round(prob_1, 2)})')
-                st.success(f'### Clase 2: {class_name_2} (Probabilidad: {round(prob_2, 2)})')
+                st.success(f'### Clase 1: {class_name_1} (Confianza: {round(prob_1, 5)})')
+                st.success(f'### Clase 2: {class_name_2} (Confianza: {round(prob_2, 5)})')
 
         st.image(image_file, caption='Imagen cargada', use_column_width=False)
         
