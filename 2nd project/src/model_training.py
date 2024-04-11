@@ -14,6 +14,7 @@ sys.path.append(str(root_dir))
 from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs
 from src.utils.data_loader import num_classes, train_loader, valid_loader
 from src.utils.cnn import CNN
+from src.utils.local_functs import CustomLoss
 
 import time
 
@@ -67,6 +68,9 @@ model.to(device)
 # Define el optimizador y la función de pérdida
 if Criterion == 'CrossEntropyLoss':
     criterion = nn.CrossEntropyLoss()
+
+elif Criterion == 'CustomLoss':
+    criterion = CustomLoss()
 else:
     raise ValueError(f'Optimizer {Criterion} not supported')
 
