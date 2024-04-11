@@ -217,11 +217,8 @@ class CNN(nn.Module):
 
         plt.show()
 
-    
 
-        
-
-def load_data(train_dir, valid_dir, batch_size, img_size):
+def load_data(train_dir, valid_dir, test_dir, batch_size, img_size):
     """Load and transform the training and validation datasets.
 
     Args:
@@ -247,13 +244,17 @@ def load_data(train_dir, valid_dir, batch_size, img_size):
         transforms.ToTensor() 
     ])
 
+    test_transforms = valid_transforms
+
     train_data = torchvision.datasets.ImageFolder(train_dir, transform=train_transforms)
     valid_data = torchvision.datasets.ImageFolder(valid_dir, transform=valid_transforms)
+    test_data = torchvision.datasets.ImageFolder(test_dir, transform=test_transforms)
 
     train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
     valid_loader = DataLoader(valid_data, batch_size=batch_size, shuffle=False)
+    test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=False)
 
-    return train_loader, valid_loader, len(train_data.classes)
+    return train_loader, valid_loader, test_loader, len(train_data.classes)
 
 def load_model_weights(filename: str):
         """Load a model from disk.
