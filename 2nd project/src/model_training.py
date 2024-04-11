@@ -83,6 +83,11 @@ epochs_no_improve = 0
 best_train_loss = float('inf')  # Inicializa la mejor pérdida en la validación como infinito positivo
 best_train_acc = 0.0  # Inicializa la mejor precisión en train como 0.0
 
+# Registrar métricas en W&B
+wandb.log({"BestModels_train_loss": 0, "BestModels_train_accuracy": 0, "BestModels_train_scores": 0,
+               "BestModels_valid_loss": 0, "BestModels_valid_accuracy": 0, "BestModels_valid_scores": 0})
+
+
 # Entrenamiento del modelo
 for epoch in range(Number_epochs):
 
