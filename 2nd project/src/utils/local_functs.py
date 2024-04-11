@@ -64,7 +64,7 @@ class CustomLoss(nn.Module):
         top_probs, top_classes = torch.topk(probabilities, k=2, dim=1)
 
         # Inicializar la puntuación
-        score = 0.0
+        loss = 0.0
 
         # Iterar sobre cada instancia
         for i in range(input.shape[0]):
@@ -77,15 +77,15 @@ class CustomLoss(nn.Module):
                 class1 = top_classes[i, 0]
                 class2 = top_classes[i, 1]
                 # Calcular la puntuación según la lógica dada
-                score += torch.where(class1 == target[i], 0.8, torch.where(class2 == target[i], 0.6, 0))
+                loss += torch.where(class1 == target[i], 0.2, torch.where(class2 == target[i], 0.4, 1.0))
             else:
                 # Obtener la clase predicha
                 class1 = top_classes[i, 0]
                 # Calcular la puntuación según la lógica dada
-                score += torch.where(class1 == target[i], 1.0, 0)
+                loss += torch.where(class1 == target[i], 0, 1.0)
 
         # Calcular el promedio de la puntuación
-        loss = -torch.mean(score)
+        loss = torch.mean(loss)
 
         return loss
     

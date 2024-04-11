@@ -68,9 +68,11 @@ model.to(device)
 # Define el optimizador y la función de pérdida
 if Criterion == 'CrossEntropyLoss':
     criterion = nn.CrossEntropyLoss()
+    extra_criterion = None
 
 elif Criterion == 'CustomLoss':
-    criterion = CustomLoss()
+    criterion = nn.CrossEntropyLoss()
+    extra_criterion = CustomLoss()
 else:
     raise ValueError(f'Optimizer {Criterion} not supported')
 
@@ -88,7 +90,7 @@ wandb.log({"BestModels_train_loss": 4, "BestModels_train_accuracy": 0, "BestMode
 
 # Entrenamiento del modelo (cnn.py ha sido modificado para incluir el registro de métricas en W&B y otras métricas)
 model.train_model(device, train_loader, valid_loader, 
-                  optimizer, criterion, Number_epochs)
+                  optimizer, criterion, extra_criterion, Number_epochs)
 
 # Finaliza el run de W&B
 wandb.finish()

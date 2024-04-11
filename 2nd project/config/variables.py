@@ -57,7 +57,7 @@ Model_used = 'resnet18'
 Learning_rate = 1e-4
 Unfreezed_layers = 0
 Number_epochs = 3
-Criterion = 'CustomLoss'   # 'CustomLoss' or 'CrossEntropyLoss'
+Criterion = 'CrossEntropyLoss'   # 'CustomLoss' or 'CrossEntropyLoss'
 Optimizer = 'Adam'
 threshold = 0.2
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum

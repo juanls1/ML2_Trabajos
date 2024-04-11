@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from torchvision import transforms
 from tempfile import TemporaryDirectory
 import wandb
+import numpy as np
 
 # Constants necessary for the project
 import sys
@@ -93,6 +94,7 @@ class CNN(nn.Module):
                     valid_loader, 
                     optimizer, 
                     criterion, 
+                    extra_criterion,
                     epochs, 
                     nepochs_to_save=Saved_epochs):
         """Train the model and save the best one based on validation accuracy.
@@ -136,6 +138,10 @@ class CNN(nn.Module):
                     # Forward pass
                     outputs = self(images)
                     loss = criterion(outputs, labels)
+
+                    if extra_criterion is not None:
+                        loss2 = extra_criterion(outputs, labels)
+                        loss.data = torch.tensor(np.log(float(loss2.data)))
 
                     # Backward pass and optimization
                     loss.backward()
@@ -197,6 +203,10 @@ class CNN(nn.Module):
                         outputs = self(images)
                         loss = criterion(outputs, labels)
                         valid_loss += loss.item()
+
+                        if extra_criterion is not None:
+                            loss2 = extra_criterion(outputs, labels)
+                            loss.data = torch.tensor(np.log(float(loss2.data)))
 
                         # Track accuracy
 
