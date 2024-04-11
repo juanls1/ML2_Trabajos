@@ -9,6 +9,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
+from src.utils.local_functs import CustomLoss
 
 
 # Constants used for displaying images (visualization.ipynb, training set sample)

@@ -11,7 +11,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name, Max_iterations_change, threshold
+from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs
 from src.utils.data_loader import num_classes, train_loader, valid_loader
 from src.utils.cnn import CNN
 
