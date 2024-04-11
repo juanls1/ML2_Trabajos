@@ -93,6 +93,8 @@ wandb.log({"BestModels_train_loss": 5, "BestModels_train_accuracy": 0, "BestMode
 model.train_model(device, train_loader, valid_loader, 
                   optimizer, criterion, extra_criterion, Number_epochs)
 
+model.save(Model_name)
+
 # Finaliza el run de W&B
 wandb.finish()
 
