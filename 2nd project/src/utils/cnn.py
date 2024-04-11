@@ -177,7 +177,7 @@ class CNN(nn.Module):
             outputs = self(images)
             predicted_labels.extend(outputs.argmax(1).tolist())
         return predicted_labels
-        
+    
     def save(self, filename: str):
         """Save the model to disk.
 
