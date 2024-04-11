@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 import torchvision
-import torch 
+import torch
 import torch.nn as nn
 import wandb
 
@@ -27,6 +27,7 @@ classification_models = torchvision.models.list_models(module=torchvision.models
 classification_models.extend(extra_models)
 
 if Model_used not in classification_models:
+
     print(f"Model {Model_used} not found")
     print("Available models are:")
     print(classification_models.extend(extra_models))
@@ -38,20 +39,20 @@ else:
 # Inicialización de wandb
 
 # start a new wandb run to track this script
-# wandb.init(
-#     # set the wandb project where this run will be logged
-#     project="ML2-CNN-PROJECT",
-    
-#     # track hyperparameters and run metadata
-#     config={
-#     "learning_rate": Learning_rate,
-#     "architecture": "my_trained_model",
-#     "dataset": "YourDataset",
-#     "epochs": Number_epochs,
-#     },
-#     dir=str(root_dir)  # o cualquier otra ruta que desees
-# )
+wandb.init(
 
+    # set the wandb project where this run will be logged
+    project="ML2-CNN-PROJECT",
+    # track hyperparameters and run metadata
+    config={
+    "learning_rate": Learning_rate,
+    "architecture": "my_trained_model",
+    "dataset": "YourDataset",
+    "epochs": Number_epochs,
+    },
+    dir=str(root_dir)  # o cualquier otra ruta que desees
+
+)
 
 # Instancia el modelo de CNN
 
@@ -64,7 +65,11 @@ model = CNN(model_used, num_classes)
 model.to(device)
 
 # Define el optimizador y la función de pérdida
-criterion = nn.CrossEntropyLoss()
+if Criterion == 'CrossEntropyLoss':
+    criterion = nn.CrossEntropyLoss()
+else:
+    raise ValueError(f'Optimizer {Criterion} not supported')
+
 criterion.to(device)
 
 if Optimizer == 'Adam':
@@ -76,19 +81,23 @@ else:
 max_epochs_no_improve = Max_iterations_change  
 epochs_no_improve = 0
 best_train_loss = float('inf')  # Inicializa la mejor pérdida en la validación como infinito positivo
-best_train_acc = 0.0  # Inicializa la mejor precisión en la validación como 0.0
+best_train_acc = 0.0  # Inicializa la mejor precisión en train como 0.0
 
 # Entrenamiento del modelo
 for epoch in range(Number_epochs):
+
     running_loss = 0.0
     correct = 0
     total = 0
+    score = 0
 
     model.train()  # Poner el modelo en modo de entrenamiento
+
     for images, labels in train_loader:
+
         images, labels = images.to(device), labels.to(device)
 
-        
+
         # Zero gradient
         optimizer.zero_grad()
 
@@ -112,38 +121,46 @@ for epoch in range(Number_epochs):
         diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
 
         if diff < threshold:
+
             class1 = top_classes[:, 0]
             prob1 = top_probs[:, 0]
             class2 = top_classes[:, 1]
             prob2 = top_probs[:, 1]
 
             match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
-        
+
         else:
+
             class1 = top_classes[:, 0]
             prob1 = top_probs[:, 0]
 
             match_score = torch.where(class1 == labels, 1.0, 0)
 
+
         total += labels.size(0)
-        correct += ((class1 == labels) | (class2 == labels)).sum().item()
+        correct += ((class1 == labels)).sum().item()
+        score += match_score
+
 
     # Calculate accuracy and loss
     train_loss = running_loss / len(train_loader)
     train_accuracy = correct / total
+    train_scores = score / total
 
-    # Log metrics to W&B
-    # wandb.log({"train_loss": train_loss, "train_accuracy": train_accuracy})
+    #------------------------------------------------------------
 
     # Calcular el accuracy y la pérdida en el conjunto de validación
     valid_running_loss = 0.0
     valid_correct = 0
     valid_total = 0
+    valid_score = 0
 
     model.eval()  # Poner el modelo en modo de evaluación
 
     with torch.no_grad():
+
         for images, labels in valid_loader:
+
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
             loss = criterion(outputs, labels)
@@ -158,39 +175,51 @@ for epoch in range(Number_epochs):
             diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
 
             if diff < threshold:
+
                 class1 = top_classes[:, 0]
                 prob1 = top_probs[:, 0]
                 class2 = top_classes[:, 1]
                 prob2 = top_probs[:, 1]
 
                 match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
-            
+
             else:
+
                 class1 = top_classes[:, 0]
                 prob1 = top_probs[:, 0]
 
                 match_score = torch.where(class1 == labels, 1.0, 0)
 
             valid_total += labels.size(0)
-            valid_correct += ((class1 == labels) | (class2 == labels)).sum().item()
+            valid_correct += ((class1 == labels)).sum().item()
+            valid_score += match_score
 
     # Calcular accuracy y loss en el conjunto de validación
     valid_loss = valid_running_loss / len(valid_loader)
     valid_accuracy = valid_correct / valid_total
+    valid_scores = valid_score / valid_total
 
     # Registrar métricas en W&B
-    # wandb.log({"valid_loss": valid_loss, "valid_accuracy": valid_accuracy})
+    wandb.log({"BestModels_train_loss": train_loss, "BestModels_train_accuracy": train_accuracy, "BestModels_train_scores": train_scores,
+               "BestModels_valid_loss": valid_loss, "BestModels_valid_accuracy": valid_accuracy, "BestModels_valid_scores": valid_scores})
 
     # Comprobar si hay mejora en la pérdida en la validación
     if train_loss < best_train_loss:
 
         best_train_loss = train_loss
         epochs_no_improve = 0  # Reinicia el contador de épocas sin mejora
+
     elif train_accuracy > best_train_acc:
+
         best_train_acc = train_accuracy
         epochs_no_improve = 0
+
     else:
         epochs_no_improve += 1
+
+    if epochs_no_improve > max_epochs_no_improve:
+        break
+
 
 # Guardado del modelo
 torch.save(model.state_dict(), Model_name)
