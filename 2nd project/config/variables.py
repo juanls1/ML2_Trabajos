@@ -43,7 +43,7 @@ Images_size = 224
 
 # Constants used for the model     (model_training.py)
 
-Max_iterations_change = 5
+Saved_epochs = 5
 extra_models = ['personal_cnn'] # It has to be done. A cnn from scratch. If we have more models, they will be added here
 classification_models = ['alexnet','convnext_base','convnext_large','convnext_small','convnext_tiny','densenet121','densenet161','densenet169','densenet201',
                          'efficientnet_b0','efficientnet_b1','efficientnet_b2','efficientnet_b3','efficientnet_b4','efficientnet_b5','efficientnet_b6','efficientnet_b7',
