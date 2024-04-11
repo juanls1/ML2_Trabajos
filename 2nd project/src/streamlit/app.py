@@ -69,15 +69,28 @@ def main():
         # Crea un DataLoader con el Dataset
         streamlit_loader = DataLoader(streamlit_data, batch_size=1, shuffle=False)
         
-        # Realizar la predicción
-        predicted_labels = model.predict(streamlit_loader)
+        for images, labels in streamlit_loader:
+            output = model(images)
+            top_probs, top_classes = torch.topk(output, k=2, dim=1)
 
-        predicted_label = predicted_labels[0]
+        predicted_label_1 = top_classes[0][0].item()
+        predicted_label_2 = top_classes[0][1].item()
+        class_name_1 = classnames[predicted_label_1]
+        class_name_2 = classnames[predicted_label_2]
+        prob_1 = top_probs[0][0].item()
+        prob_2 = top_probs[0][1].item()
 
-        class_name = classnames[predicted_label]
+        class_name_1 = classnames[predicted_label_1]
+        class_name_2 = classnames[predicted_label_2]
 
-        # Mostrar la predicción y la imagen
-        st.write(f'### Clase predicha: {class_name}')
+        diff = prob_1 - prob_2
+
+        if diff > 0.2:
+            st.write(f'### Clase predicha: {class_name_1}')
+        else:
+            st.write(f'### Clase predicha: {class_name_1} (Probabilidad: {prob_1})')
+            st.write(f'### Clase predicha: {class_name_2} (Probabilidad: {prob_2})')
+
         st.image(image_file, caption='Imagen cargada', use_column_width=False)
         
 

@@ -91,7 +91,7 @@ for epoch in range(Number_epochs):
         
         # Zero gradient
         optimizer.zero_grad()
-
+        
         # Forward pass
         outputs = model(images)
         loss = criterion(outputs, labels)
