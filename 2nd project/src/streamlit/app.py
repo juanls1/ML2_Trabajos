@@ -20,51 +20,73 @@ from config.variables import Images_size, Images_types, Disp_Models, Models_path
 
 
 def main():
+    # Configuración de la página
     st.set_page_config(page_title="ML2 - CNN", layout="centered")
-    st.title("Clasificación de imágenes con CNNs")
-    st.markdown("¡Bienvenidos a la aplicación web Canonist.ia de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!")
+    st.title("Clasificación de Imágenes con CNNs")
     
-    # Widget para cargar una imagen
-    image_file = st.file_uploader("### Cargar imagen", type=Images_types)
+    # Mensaje de bienvenida
+    with st.container():
+        st.markdown("""
+            ¡Bienvenidos a la aplicación web Canonist.ia de clasificación de imágenes del grupo compuesto por Alberto, Jorge, Nacho y Juan!
+            Esta aplicación utiliza redes neuronales convolucionales (CNNs) para clasificar imágenes. Por favor, selecciona el modo de clasificación en la barra lateral y carga una imagen.
+        """)
+
+    # Configuraciones de la barra lateral
+    with st.sidebar:
+        st.header("Configuraciones")
+        # Selector de modo de clasificación
+        classification_mode = st.radio(
+            "Modo de Clasificación:",
+            ("Single-class", "Multi-class"),
+            help="Selecciona 'Single-class' si deseas que la imagen se clasifique en una sola categoría. Elige 'Multi-class' para obtener múltiples posibles categorías."
+        )
+        
+        # Selector del modelo
+        model_option = st.selectbox(
+            "Modelo a Utilizar:",
+            Disp_Models,
+            help="Selecciona el modelo de CNN que deseas usar para clasificar tu imagen."
+        )
+
+        model_path = Models_paths[Disp_Models.index(model_option)]
+        print(model_path)
+
+        used_classes = num_classes
+        
+        # Cargar el modelo
+
+        model_weights = load_model_weights(model_path)
+
+        # Change the model name according to the model used
+
+        if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
+            model_used = torchvision.models.resnet50(weights='DEFAULT')
+        else:
+            raise ValueError(f"#### Model {Models_paths} not supported")
+        
+        model = CNN(model_used, used_classes)
+        
+        model.load_state_dict(model_weights)
     
-    # Selección del modelo
-    model_option = st.selectbox("### Selecciona el modelo a utilizar", Disp_Models)
-
-    # Seleccionar el modelo a utilizar
-    model_path = Models_paths[Disp_Models.index(model_option)]
-
-    used_classes = num_classes
-    
-    # Cargar el modelo
-
-    model_weights = load_model_weights(model_path)
-
-    # Change the model name according to the model used
-
-    if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
-        model_used = torchvision.models.resnet50(weights='DEFAULT')
-    else:
-        raise ValueError(f"#### Model {Models_paths} not supported")
-    
-    model = CNN(model_used, used_classes)
-    
-    model.load_state_dict(model_weights)
+    # Carga de imagen y selección de modelo
+    with st.container():
+        image_file = st.file_uploader("Cargar Imagen", type=Images_types)
     
     if image_file is not None:
-        # Preprocesar la imagen
-        image = Image.open(image_file)
+        with st.spinner('Procesando imagen...'):
+            image = Image.open(image_file)
 
-        img_size = Images_size
+            img_size = Images_size
 
-        streamlit_transforms = transforms.Compose([
-                transforms.Resize((img_size, img_size)),
-                transforms.Grayscale(num_output_channels=3),  # Convertir a RGB si es necesario
-                transforms.ToTensor() 
-            ])
+            streamlit_transforms = transforms.Compose([
+                    transforms.Resize((img_size, img_size)),
+                    transforms.Grayscale(num_output_channels=3),  # Convertir a RGB si es necesario
+                    transforms.ToTensor() 
+                ])
 
 
-        # Crea una instancia del Dataset personalizado
-        streamlit_data = CustomImageDataset(image, transform=streamlit_transforms)
+            # Crea una instancia del Dataset personalizado
+            streamlit_data = CustomImageDataset(image, transform=streamlit_transforms)
 
         # Crea un DataLoader con el Dataset
         streamlit_loader = DataLoader(streamlit_data, batch_size=1, shuffle=False)
@@ -72,6 +94,9 @@ def main():
         for images, labels in streamlit_loader:
             output = model(images)
             top_probs, top_classes = torch.topk(output, k=2, dim=1)
+
+        _, predicted = torch.max(output, 1)
+
 
         predicted_label_1 = top_classes[0][0].item()
         predicted_label_2 = top_classes[0][1].item()
@@ -82,14 +107,19 @@ def main():
 
         class_name_1 = classnames[predicted_label_1]
         class_name_2 = classnames[predicted_label_2]
+        predicted = classnames[predicted.item()]
+        print(class_name_1, predicted)
 
         diff = prob_1 - prob_2
 
-        if diff > 0.2:
-            st.write(f'### Clase predicha: {class_name_1}')
+        if classification_mode == "Single-class":
+            st.success(f'### Clase predicha: {class_name_1} (Probabilidad: {round(prob_1, 2)})')
         else:
-            st.write(f'### Clase predicha: {class_name_1} (Probabilidad: {prob_1})')
-            st.write(f'### Clase predicha: {class_name_2} (Probabilidad: {prob_2})')
+            if diff > 0.2:
+                st.success(f'### Clase predicha: {class_name_1}')
+            else:
+                st.success(f'### Clase 1: {class_name_1} (Probabilidad: {round(prob_1, 2)})')
+                st.success(f'### Clase 2: {class_name_2} (Probabilidad: {round(prob_2, 2)})')
 
         st.image(image_file, caption='Imagen cargada', use_column_width=False)
         
