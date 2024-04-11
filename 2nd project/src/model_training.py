@@ -84,8 +84,8 @@ else:
     raise ValueError(f'Optimizer {Optimizer} not supported')
 
 # Registrar métricas en W&B
-wandb.log({"BestModels_train_loss": 4, "BestModels_train_accuracy": 0, "BestModels_train_scores": 0,
-               "BestModels_valid_loss": 4, "BestModels_valid_accuracy": 0, "BestModels_valid_scores": 0})
+wandb.log({"BestModels_train_loss": 5, "BestModels_train_accuracy": 0, "BestModels_train_scores": 0,
+               "BestModels_valid_loss": 5, "BestModels_valid_accuracy": 0, "BestModels_valid_scores": 0})
 
 
 # Entrenamiento del modelo (cnn.py ha sido modificado para incluir el registro de métricas en W&B y otras métricas)

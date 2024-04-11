@@ -141,7 +141,7 @@ class CNN(nn.Module):
 
                     if extra_criterion is not None:
                         loss2 = extra_criterion(outputs, labels)
-                        loss.data = torch.tensor(np.log(float(loss2.data)))
+                        loss.data = torch.tensor(3*np.exp(float(loss2.data)/len(train_loader.dataset)))
 
                     # Backward pass and optimization
                     loss.backward()
@@ -206,7 +206,7 @@ class CNN(nn.Module):
 
                         if extra_criterion is not None:
                             loss2 = extra_criterion(outputs, labels)
-                            loss.data = torch.tensor(np.log(float(loss2.data)))
+                            loss.data = torch.tensor(3*np.exp(float(loss2.data)/len(valid_loader.dataset)))
 
                         # Track accuracy
 
