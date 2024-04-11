@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/jorgeperalta/Desktop/Master/ML2/Trabajo_2/src/model_training.py", line 60, in <module>
+    model = CNN(model_used, num_classes)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jorgeperalta/Desktop/Master/ML2/Trabajo_2/src/utils/cnn.py", line 31, in __init__
+    nn.Linear(classifier_attr.in_features, 1024),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/Caskroom/miniforge/base/envs/CNN/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1688, in __getattr__
+    raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
+AttributeError: 'Sequential' object has no attribute 'in_features'
