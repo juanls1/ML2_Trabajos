@@ -117,35 +117,35 @@ for epoch in range(Number_epochs):
         # Get the probabilities and predicted classes
         top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
 
-        # Check if the difference between the top two classes is less than threshold
-        diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
+        # Iterar sobre cada foto
+        for i in range(outputs.shape[0]):
+            # Calcular la diferencia de probabilidades para la foto actual
+            diff = torch.abs(top_probs[i, 0] - top_probs[i, 1])
+            
+            # Comparar la diferencia con el umbral
+            if diff < threshold:
+                class1 = top_classes[i, 0]
+                prob1 = top_probs[i, 0]
+                class2 = top_classes[i, 1]
+                prob2 = top_probs[i, 1]
+                match_score = torch.where(class1 == labels[i], 0.8, torch.where(class2 == labels[i], 0.6, 0))
+            else:
+                class1 = top_classes[i, 0]
+                prob1 = top_probs[i, 0]
+                match_score = torch.where(class1 == labels[i], 1.0, 0)
 
-        if diff < threshold:
+            # Incrementar el contador de predicciones correctas
+            correct += ((class1 == labels[i])).sum().item()
+            # Sumar el score
+            score += match_score
 
-            class1 = top_classes[:, 0]
-            prob1 = top_probs[:, 0]
-            class2 = top_classes[:, 1]
-            prob2 = top_probs[:, 1]
-
-            match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
-
-        else:
-
-            class1 = top_classes[:, 0]
-            prob1 = top_probs[:, 0]
-
-            match_score = torch.where(class1 == labels, 1.0, 0)
-
-
+        # Incrementar el contador total
         total += labels.size(0)
-        correct += ((class1 == labels)).sum().item()
-        score += match_score
-
 
     # Calculate accuracy and loss
     train_loss = running_loss / len(train_loader)
     train_accuracy = correct / total
-    train_scores = score / total
+    train_scores = float(score) / total
 
     #------------------------------------------------------------
 
@@ -171,28 +171,30 @@ for epoch in range(Number_epochs):
             # Get the probabilities and predicted classes
             top_probs, top_classes = torch.topk(outputs, k=2, dim=1)
 
-            # Check if the difference between the top two classes is less than threshold
-            diff = torch.abs(top_probs[:, 0] - top_probs[:, 1])
+            # Iterar sobre cada foto
+            for i in range(outputs.shape[0]):
+                # Calcular la diferencia de probabilidades para la foto actual
+                diff = torch.abs(top_probs[i, 0] - top_probs[i, 1])
+                
+                # Comparar la diferencia con el umbral
+                if diff < threshold:
+                    class1 = top_classes[i, 0]
+                    prob1 = top_probs[i, 0]
+                    class2 = top_classes[i, 1]
+                    prob2 = top_probs[i, 1]
+                    match_score = torch.where(class1 == labels[i], 0.8, torch.where(class2 == labels[i], 0.6, 0))
+                else:
+                    class1 = top_classes[i, 0]
+                    prob1 = top_probs[i, 0]
+                    match_score = torch.where(class1 == labels[i], 1.0, 0)
 
-            if diff < threshold:
+                # Incrementar el contador de predicciones correctas
+                valid_correct += ((class1 == labels[i])).sum().item()
+                # Sumar el score
+                valid_score += match_score
 
-                class1 = top_classes[:, 0]
-                prob1 = top_probs[:, 0]
-                class2 = top_classes[:, 1]
-                prob2 = top_probs[:, 1]
-
-                match_score = torch.where(class1 == labels, 0.8, torch.where(class2 == labels, 0.6, 0))
-
-            else:
-
-                class1 = top_classes[:, 0]
-                prob1 = top_probs[:, 0]
-
-                match_score = torch.where(class1 == labels, 1.0, 0)
-
+            # Incrementar el contador total
             valid_total += labels.size(0)
-            valid_correct += ((class1 == labels)).sum().item()
-            valid_score += match_score
 
     # Calcular accuracy y loss en el conjunto de validación
     valid_loss = valid_running_loss / len(valid_loader)
@@ -225,7 +227,7 @@ for epoch in range(Number_epochs):
 torch.save(model.state_dict(), Model_name)
 
 # Finaliza el run de W&B
-# wandb.finish()
+wandb.finish()
 
 stop_time = time.time()
 
