@@ -11,7 +11,7 @@ root_dir = Path(__file__).resolve().parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs
+from config.variables import Model_used, extra_models, Criterion, Optimizer, Learning_rate, Number_epochs, Model_name
 from src.utils.data_loader import num_classes, train_loader, valid_loader
 from src.utils.cnn import CNN
 from src.utils.local_functs import CustomLoss
@@ -44,6 +44,7 @@ wandb.init(
 
     # set the wandb project where this run will be logged
     project="ML2-CNN-PROJECT",
+    name=Model_name,
     # track hyperparameters and run metadata
     config={
     "learning_rate": Learning_rate,
