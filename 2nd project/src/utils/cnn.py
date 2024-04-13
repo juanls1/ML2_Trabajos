@@ -19,7 +19,7 @@ root_dir = Path(__file__).resolve().parent.parent.parent
 # Agregar la ruta de la carpeta al sys.path
 sys.path.append(str(root_dir))
 
-from config.variables import Unfreezed_layers, threshold, Saved_epochs
+from config.variables import Unfreezed_layers, threshold, Saved_epochs, Model_name
 
 class CNN(nn.Module):
     """Convolutional Neural Network model for image classification."""
@@ -249,6 +249,7 @@ class CNN(nn.Module):
                         best_accuracy = valid_accuracy
                         best_score = valid_score
                         torch.save(self.state_dict(), best_model_path)
+                        self.save(Model_name)
 
                 # Registrar métricas en W&B
                 wandb.log({"BestModels_train_loss": train_loss, "BestModels_train_accuracy": train_accuracy, "BestModels_train_scores": train_score,
