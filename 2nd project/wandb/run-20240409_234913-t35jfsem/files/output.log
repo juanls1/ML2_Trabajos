@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/jorgeperalta/Desktop/Master/ML2/Trabajo_2/src/model_training.py", line 60, in <module>
+    model = CNN(model_used, num_classes)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jorgeperalta/Desktop/Master/ML2/Trabajo_2/src/utils/cnn.py", line 52, in __init__
+    nn.Linear(self.base_model.classifier[-1].in_features, 1024),
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^
+TypeError: 'Linear' object is not subscriptable

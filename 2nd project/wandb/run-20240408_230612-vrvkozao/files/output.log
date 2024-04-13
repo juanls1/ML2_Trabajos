@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/jorgeperalta/Desktop/Master/ML2/Trabajo_2/src/model_training.py", line 96, in <module>
+    loss.backward()
+  File "/usr/local/Caskroom/miniforge/base/envs/CNN/lib/python3.12/site-packages/torch/_tensor.py", line 522, in backward
+    torch.autograd.backward(
+  File "/usr/local/Caskroom/miniforge/base/envs/CNN/lib/python3.12/site-packages/torch/autograd/__init__.py", line 266, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

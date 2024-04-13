@@ -1,8 +1,23 @@
-# 2nd project Folder: CANONIST.IA (ENTREGA CNN)
+# CANONIST.IA
 
-Hay que hacerlo, explicando los .py que tenemos y para qué sirven, el notebook, los datos, etc.
+## Requirements 📋
 
-Cambiar todo al mismo idioma (quizás mejor inglés pero como veais)
+ 1. Clone the repository
 
+```
+git clone https://github.com/juanls1/ML2_Trabajos.git
+```
 
-Dejo un ejemplo en README (1).md
+2. Install dependenciaes
+
+```
+cd "ML2_Trabajos/2nd Project"
+python -m venv ML_deep_learning_Entrega
+ML_deep_learning_Entrega\Scripts\activate
+pip install -r requirements.txt
+```
+
+> [!IMPORTANT]
+> If you want to train the models with the **GPU**, you'll have to install [CUDA](https://developer.nvidia.com/cuda-toolkit-archive) and the respectiove versions of [Torch and torchivision](https://pytorch.org/) manually, as the versions from the requirements.txt are for **CPU** training
+
+## Project Structure 📁
