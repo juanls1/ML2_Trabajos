@@ -69,5 +69,28 @@ Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases h
  + Cargar un modelo preentrenado de HuggingFace más novedoso
 
 
+# 3rd project Folder: ENTREGA APRENDIZAJE POR REFUERZO
 
+## CONTEXTO DEL TRABAJO
 
+Será obligatorio realizar un trabajo final que aplique las técnicas de aprendizaje por refuerzo vistas en esta parte de la asignatura. Se usará cualquier entorno disponible en Gym (https://gym.openai.com/)  y se le aplicarán las técnicas de aprendizaje por refuerzo que se estime oportuno. Se usará un caso distinto a los suministrados como apoyo al material de clase.
+
+El trabajo podrá hacerse de manera individual o en grupos. En caso de grupos cada componente deberá realizar un algoritmo  distinto y se ha de indicar quien lo ha desarrollado. En este caso, la comparativa de resultados se supone es labor conjunta. Es de esperar que un trabajo hecho por más componentes conlleve una mayor complejidad, volumen y alcance de las tareas realizadas.
+
+## CRITERIOS DE EVALUACIÓN
+
+La evaluación se realizará en base a los siguientes criterios:
+
+ + Definición del contexto del trabajo, objetivos y métodos de RL a aplicar, así como su idoneidad. (1 Pto.)
+
+ + Cantidad, profundidad y calidad del trabajo desarrollado. (2 Ptos)
+
+ + Número de técnicas empleadas en el proyecto, así como su idoneidad.(2.5 Ptos.)
+
+ + Interpretación de resultados y pruebas realizadas. (1.5 puntos)
+
+ + Comparativa de métodos. (1.5 puntos)
+
+ + Claridad de escritura y presentación del trabajo en la memoria del mismo. (1.5 Ptos.)
+
+Este trabajo formará parte de la media de la nota obtenida por trabajos (labs) en la asignatura. Junto a la memoria del trabajo se adjuntará un video de como máximo 1 minuto de duración con los resultados de los algoritmos ensayados.
