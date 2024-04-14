@@ -69,7 +69,7 @@ After executing the model_training cript, an URL that guides the user to the W&B
 
 ### Running the streamlit app to classify new images
 ```
-python src/streamlit/app.py
+streamlit run src/streamlit/app.py
 
 ```
 
@@ -83,7 +83,7 @@ During the development of the project some ideas to try and achieve more accurat
 It must be pointed out that the best model trained so far achieved about a 95% accuracy in both the training dataset and the validation dataset. 
 
 ### 1.Multi-Class Output Models
- When the 5 % of pictures in which the models were misclassifying was analysed, a pattern was detected. In some pictures, two of the possible environments the model can classify coul be appreciated, such as pictures of highway near the sea, in which the model struggled to decide between the coast label or the highway label. In the future, we will try to tune the model, so in this cases it can return the two most likely classes.
+ When the 5 % of pictures in which the models were misclassifying was analysed, a pattern was detected. In some pictures, two of the possible environments the model can classify could be appreciated, such as pictures of highway near the sea, in which the model struggled to decide between the coast label or the highway label. In the future, we will try to tune the model, so in this cases it can return the two most likely classes.
 
 ### 2.Data Augmentation
  A work of rotating, scaling, and applying these type of transformations to the pictures in the dataset could be applied in order to increase the size of the dataset
@@ -93,3 +93,9 @@ It must be pointed out that the best model trained so far achieved about a 95% a
 
 ### 4.HugginFace models
  In the future it will be tried to train models using HugginFace, what should improve the models accuracy, as those are more modern and novel models than the ones used so far.
+
+### 5.Training with new Loss Function
+It was attempted to train models using a loss function specifically designed for this problem. As it was mentioned earlier, in some of the pictures our models misclassified, two potential classes could be appreciated. 
+Due to that, we tried to create a new loss function that did not penalize so much a missclasification in the cases that the true class was the second option for the model. 
+The results obtained were quite similar to the ones obtained with the CRoss-Entropy Loss Function, however, in the future we will follow this line of thought in order to get more accurate models.
+
