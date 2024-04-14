@@ -48,30 +48,25 @@ pip install -r requirements.txt
 
 ## What can be done with the repository  
 
- #### Training a model
+ ### Training a model
 
 1. Tune the parameters of the model you are willing to train in the variables.py script
 
 2. Execute the model
-
+```
  python model_training.py
-
+```
 3. Review the training of the model through W&B
 
 After executing the model_training cript, an URL that guides the user to the W&B report about the model report will be shown.
 
 
 
-#### Running the streamlit app to classify new images
-
+### Running the streamlit app to classify new images
+```
 python src/streamlit/app.py
 
-
-
-
-## Deeper Code Detail
-
-
+```
 
 
 
@@ -82,10 +77,14 @@ During the development of the project some ideas to try and achieve more accurat
 
 It must be pointed out that the best model trained so far achieved about a 95% accuracy in both the training dataset and the validation dataset. 
 
-**1.Multi-Class Output Models** When the 5 % of pictures in which the models were misclassifying was analysed, a pattern was detected. In some pictures, two of the possible environments the model can classify coul be appreciated, such as pictures of highway near the sea, in which the model struggled to decide between the coast label or the highway label. In the future, we will try to tune the model, so in this cases it can return the two most likely classes.
+### 1.Multi-Class Output Models:
+ When the 5 % of pictures in which the models were misclassifying was analysed, a pattern was detected. In some pictures, two of the possible environments the model can classify coul be appreciated, such as pictures of highway near the sea, in which the model struggled to decide between the coast label or the highway label. In the future, we will try to tune the model, so in this cases it can return the two most likely classes.
 
-**2.Data Augmentation** A work of rotating, scaling, and applying these type of transformations to the pictures in the dataset could be applied in order to increase the amount of data available
+### 2.Data Augmentation:
+ A work of rotating, scaling, and applying these type of transformations to the pictures in the dataset could be applied in order to increase the size of the dataset
 
-**3.Second Level Models**  An idea is to introduce the pictures for which the AI model returns lower levels of confidence in 'submodels'. Those models would have been trained exclusively to determine if a picture belongs to a given class or not. The final prediction would be decided according to the submodel that returns a higher level of confidence for predicting positively. This technique may increase the accuracy of our models.
+### 3.Second Level Models
+ An idea is to introduce the pictures for which the AI model returns lower levels of confidence in 'submodels'. Those models would have been trained exclusively to determine if a picture belongs to a given class or not. The final prediction would be decided according to the submodel that returns a higher level of confidence for predicting positively. This technique may increase the accuracy of our models.
 
-**4.HugginFace models** In the future it will be tried to train models using HugginFace, what should improve the models accuracy, as those are more modern and novel models than the ones used so far.
+### 4.HugginFace models
+ In the future it will be tried to train models using HugginFace, what should improve the models accuracy, as those are more modern and novel models than the ones used so far.
