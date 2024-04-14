@@ -8,6 +8,7 @@ from torchvision import transforms
 from tempfile import TemporaryDirectory
 import wandb
 import numpy as np
+import timm
 
 # Constants necessary for the project
 import sys
@@ -58,9 +59,7 @@ class CNN(nn.Module):
                 nn.Softmax(dim=1)
             )
 
-            # Try replacing the last layer of the base model for vgg
-            self.base_model.classifier[-1] = nn.Identity()
-        except AttributeError:
+        except:
             try:
                 # Add a new softmax output layer
                 self.fc = nn.Sequential(
@@ -73,9 +72,19 @@ class CNN(nn.Module):
 
                 # If that fails, try replacing the last layer of the base model for resnet
                 self.base_model.fc = nn.Identity()
-            except AttributeError:
-                # If neither works, raise an error
-                raise AttributeError("Neither 'classifier' nor 'fc' attribute found in the base model.")
+            except:
+                try:
+                    self.base_model.heads = nn.Sequential(
+                        nn.Linear(self.base_model.hidden_dim, 1024),
+                        nn.ReLU(),
+                        nn.Dropout(0.2),
+                        nn.Linear(1024, num_classes),
+                        nn.Softmax(dim=1)
+                    )
+
+                except AttributeError:
+                    # If neither works, raise an error
+                    raise AttributeError("Neither 'classifier', 'heads' nor 'fc' attribute found in the base model.")
 
     def forward(self, x):
         """Forward pass of the model.
@@ -84,8 +93,11 @@ class CNN(nn.Module):
             x: Input data.
         """
         x = self.base_model(x)
-        x = x.reshape(x.size(0), -1)
-        x = self.fc(x)
+        try:
+            x = x.reshape(x.size(0), -1)
+            x = self.fc(x)
+        except:
+            pass
         return x
 
     def train_model(self, 
@@ -252,8 +264,8 @@ class CNN(nn.Module):
                         self.save(Model_name)
 
                 # Registrar métricas en W&B
-                wandb.log({"BestModels_train_loss": train_loss, "BestModels_train_accuracy": train_accuracy, "BestModels_train_scores": train_score,
-                        "BestModels_valid_loss": valid_loss, "BestModels_valid_accuracy": valid_accuracy, "BestModels_valid_scores": valid_score})
+                # wandb.log({"BestModels_train_loss": train_loss, "BestModels_train_accuracy": train_accuracy, "BestModels_train_scores": train_score,
+                #         "BestModels_valid_loss": valid_loss, "BestModels_valid_accuracy": valid_accuracy, "BestModels_valid_scores": valid_score})
 
                 
             torch.save(self.state_dict(), best_model_path)    
