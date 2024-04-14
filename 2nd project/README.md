@@ -1,6 +1,6 @@
 # Classiffying AI for environment recognition
 
-### Creation of an AI that is capable to receive an input picture and classify the picture according to its environment 
+### Creation of an AI that is capable of receiving an input picture and classify the picture according to its environment 
 
 The project mainly consists on the training of different CNNs through the use of pretrained models, in order to get a model that can efficiently classify the picture environment. 
 The training of models is connected with Weights and Biases, so all the metrics of every model trained will be reported in W&B.
