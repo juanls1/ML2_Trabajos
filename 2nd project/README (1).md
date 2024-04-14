@@ -1,86 +1,91 @@
-# GenAI-TFM-Project-2024
+# Classiffying AI for environment recognition
 
-_Project of Research Agents for IRB documents_
+## Creation of an AI that is capable to receive an input picture and classify the picture according to its environment(living room, forest, coast,...)
+
+The project mainly consists on the training of different CNNs through the use of pretrained models, in order to get a model that can efficiently classify the picture environment. 
+The training of models is connected with Weights and Biases, so all the metrics of every model trained will be reported in W&B.
+
+**The different classes of environments that IA has been trained to properly predict can be seen in the data directory** 
+
+Along with the AI model, the project also includes the functionality of launching an streamlit app for the use of the AI. It enables the user to upload a picture and classify it using some of the available models in a way more user-friendly manner.
+
 
 ## Previous requirements 📋
 
  1. Clone the repository
 
 ```
-git clone git@github.com:mmctech/GenAI-TFM-Project-2024.git
+git clone https://github.com/juanls1/ML2_Trabajos/
 ```
 
- 2. Create a venv & install the necessary libraries (requirements_temp is currently necessary)
+(This whole project corresponds with the 2nd project directory of the repository )
+
+ 2. Create a venv & install the necessary libraries 
 
 ```
-python -m venv DocReaderLenAI
-
-.\DocReaderLenAI\Scripts\activate
+conda create --name CNN
 
 pip install -r requirements.txt
 
-pip install -r requirements_temp.txt
 ```
 
- 3. Add your own OpenAI API key to a new file called ```config/KEYS.py```
-
-```
-openai_key = "XXXXXXXXXXXXX"
-```
-
- 4. If necessary, update ```.gitignore``` with your own sensitive files
+3. If necessary, update ```.gitignore``` with your own sensitive files
 
 
 ## Folder Explanation :file_folder: 
 
- + **config:** Folder containing the api keys, the questions to be answered, the config parameters for the OpenAI client and the constants used along the rest of the source files. 
+ + **config:** Folder containing the .py file with the parameters of the CNN that will be trained. It includes, pretrained model name, number of epochs, learning rate,... 
 
- + **data:** Folder containing all the inputs used for the model, as well as the output generated.
+ + **data:** Folder containing all the inputs used for the model. It is split in 3 sets, one for training of the model, other for its validation(checking the overfitting), and a smaller one for testing the model in the end.
 
- + **src:** Folder containing the core of the model. It has a utils folder with the functions used divided by use, as well as the main code.
+ + **models** Folder containing the weights, architectures and all the information about the already trained CNNs.
 
- + **vold:** Folder containing the previous versions of the project.
+ + **src:** Folder containing the core of the model. It includes a streamlit directory with the needed .py to launch the streamlit app. It also inncludes a utils directory including some of the fucntions and the CNN class required for the models training.
+ And mainly, it includes the model_training.py script whose execution performs the training of the AI model.
 
-    + **V0:** Tomás's version.
-
-    + **V1:** Tomás's version with a few improvements:
-
-        + Code more divided by use and organization of own folders.
-
-        + Update of deprecated functions.
-
-        + Inclusion of prompting techniques in order to obtain the confidence level in the response, as well as the reference, indicating also the role of the model.
+ + **wandb:** As all the info of the models is reported to W&B, W&B sends some logs about the information from each model saved in the page. That info is contained in this repository.
 
 
-## Implementation :computer: 
+## What can be done with the repository  
 
-If it is desired to run the code in order to test it, by running the ```src/__main__.py``` file it is possible to obtain a _.xlsx_ output with the questions and answers.
+ #### Training a model
 
-## Previous Work 
+1. Tune the parameters of the model you are willing to train in the variables.py script
 
-The main versions are:
+2. Execute the model
 
- + **V0:** Tomás's version.
+ python model_training.py
 
- + **V1:** Code division and ordering. Addition of basic prompt engineering and few shots. Inclusion of 2 different models (RetrievalQA and RetrievalQAWithSourcesChain), with an unique prompt and example.
+3. Review the training of the model through W&B
 
+After executing the model_training cript, an URL that guides the user to the W&B report about the model report will be shown.
+
+
+
+#### Running the streamlit app to classify new images
+
+python src/streamlit/app.py
+
+
+
+
+## Deeper Code Detail
+
+
+
+
+
+ 
 ## Current Improvement Work 🔧
 
-The project is now facing the begginingg of the V1.5, as well as the basic approach for the V2. The main ideas are:
+During the development of the project some ideas to try and achieve more accurate models came up, however they have not been implemented so far due to lack of time.
 
- + V1.5: 
- 
-   + Fix the confidence levels, using ground truth answers and metrics.
+It must be pointed out that the best model trained so far achieved about a 95% accuracy in both the training dataset and the validation dataset. 
 
-   + Improve the citation information using metadata.
+**1.Multi-Class Output Models** When the 5 % of pictures in which the models were misclassifying was analysed, a pattern was detected. In some pictures, two of the possible environments the model can classify coul be appreciated, such as pictures of highway near the sea, in which the model struggled to decide between the coast label or the highway label. In the future, we will try to tune the model, so in this cases it can return the two most likely classes.
 
- + V2: 
- 
-   + Improve the citation information more if needed.
+**2.Data Augmentation** A work of rotating, scaling, and applying these type of transformations to the pictures in the dataset could be applied in order to increase the amount of data available
 
-   + Change the chunking division:
+**3.Second Level Models**  An idea is to introduce the pictures for which the AI model returns lower levels of confidence in 'submodels'. Those models would have been trained exclusively to determine if a picture belongs to a given class or not. The final prediction would be decided according to the submodel that returns a higher level of confidence for predicting positively. This technique may increase the accuracy of our models.
 
-      + Iterative variable size using the text format to separate the unrelated paragraphs.
-
-      + Manual size decision using specific keywords.
-
+**4.HugginFace models** In the future it will be tried to train models using HugginFace, what should improve the models accuracy, as those are more modern and novel models than the ones used so far.
