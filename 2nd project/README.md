@@ -1,4 +1,4 @@
-# Classiffying AI for environment recognition
+# CANONIST.IA: Classiffying AI for environment recognition
 
 ### Creation of an AI that is capable of receiving an input picture and classify the picture according to its environment 
 
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
  + **data:** Folder containing all the inputs used for the model. It is split in 3 sets, one for training of the model, other for its validation(checking the overfitting), and a smaller one for testing the model in the end.
 
- + **models** Folder containing the weights, architectures and all the information about the already trained CNNs.
+ + **models:** Folder containing the weights, architectures and all the information about the already trained CNNs.
 
  + **src:** Folder containing the core of the model. It includes a streamlit directory with the needed .py to launch the streamlit app. It also inncludes a utils directory including some of the fucntions and the CNN class required for the models training.
  And mainly, it includes the model_training.py script whose execution performs the training of the AI model.
