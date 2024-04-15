@@ -1,14 +1,16 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch.utils.data import DataLoader
-from torchvision import transforms
+import torchvision
 import numpy as np
-from src.utils.data_loader import num_classes, train_loader, valid_loader, test_loader
-from src.utils.cnn import CNN
-from src.utils.data_loader import num_classes, classnames
-from src.utils.cnn import load_model_weights
+from utils.data_loader import num_classes, train_loader, valid_loader, test_loader
+from utils.cnn import CNN
+from utils.data_loader import num_classes, classnames
+from utils.cnn import load_model_weights
 from config.variables import threshold
+import os
+import sys
+from pathlib import Path
 
 used_classes = num_classes
 
@@ -23,7 +25,13 @@ model_used = torchvision.models.convnext_small(weights='DEFAULT')
 
 model = CNN(model_used, used_classes)
 
-model_path = "C:\Users\ignac\OneDrive\Escritorio\ICAI\ML2\ML2_Trabajos\2nd project\models\convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam"
+
+root_dir = Path(__file__).resolve().parent.parent
+
+sys.path.append(str(root_dir))
+Models_dir = os.path.join(root_dir, 'models')
+
+model_path = os.path.join(Models_dir, 'convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam')
 
 model_weights = load_model_weights(model_path, map_location=device)
 
@@ -37,7 +45,6 @@ model.eval()
 with torch.no_grad():
 
     for images, labels in test_loader:
-
         images, labels = images.to(device), labels.to(device)
         outputs = model(images)
         loss = criterion(outputs, labels)
