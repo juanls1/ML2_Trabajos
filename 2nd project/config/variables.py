@@ -81,4 +81,4 @@ Disp_Models = ["Modelo 1",
 Models_dir = os.path.join(root_dir, 'models')
 Models_paths = [os.path.join(Models_dir, 'resnet50-1epoch'), 
                 os.path.join(Models_dir, 'resnet50-3epoch-LR1e-5'),
-                os.path.join(Models_dir, 'resnet50-LR_0.0001-NE_50-UL_3-C_CrossEntropyLoss-O_Adam')]
+                os.path.join(Models_dir, 'convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam')]

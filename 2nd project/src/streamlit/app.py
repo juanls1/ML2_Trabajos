@@ -18,7 +18,7 @@ sys.path.append(str(root_dir))
 from src.utils.data_loader import num_classes, classnames
 from src.utils.cnn import load_model_weights, CNN
 from src.utils.local_functs import CustomImageDataset
-from config.variables import Images_size, Images_types, Disp_Models, Models_paths
+from config.variables import Images_size, Images_types, Disp_Models, Models_paths, classification_models, extra_models
 
 
 def main():
@@ -55,15 +55,20 @@ def main():
         used_classes = num_classes
         
         # Cargar el modelo
+        device = torch.device('cpu')
+        model_weights = load_model_weights(model_path, map_location=device)
+        model_name = model_path.split('\\')[-1].split("-")[0]
 
-        model_weights = load_model_weights(model_path)
 
         # Change the model name according to the model used
 
-        if model_path.split('\\')[-1].split('-')[0] == 'resnet50':
-            model_used = torchvision.models.resnet50(weights='DEFAULT')
+        if model_name not in classification_models:
+            print(f"Model {model_name} not found")
+            print("Available models are:")
+            print(classification_models.extend(extra_models))
+            sys.exit()
         else:
-            raise ValueError(f"#### Model {Models_paths} not supported")
+            model_used = torchvision.models.__dict__[model_name](weights='DEFAULT')
         
         model = CNN(model_used, used_classes)
         

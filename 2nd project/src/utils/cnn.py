@@ -8,7 +8,6 @@ from torchvision import transforms
 from tempfile import TemporaryDirectory
 import wandb
 import numpy as np
-import timm
 
 # Constants necessary for the project
 import sys
@@ -366,7 +365,7 @@ def load_data(train_dir, valid_dir, test_dir, batch_size, img_size):
 
     return train_loader, valid_loader, test_loader, len(train_data.classes)
 
-def load_model_weights(filename: str):
+def load_model_weights(filename: str, map_location=None):
         """Load a model from disk.
         IMPORTANT: The model must be initialized before loading the weights.
         Args:
@@ -376,5 +375,5 @@ def load_model_weights(filename: str):
         filename = os.path.join('models', filename)
 
         # Load the model
-        state_dict = torch.load(filename+'.pt')
+        state_dict = torch.load(filename+'.pt', map_location=map_location)
         return state_dict

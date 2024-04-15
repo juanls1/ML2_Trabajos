@@ -28,12 +28,10 @@ classification_models = torchvision.models.list_models(module=torchvision.models
 classification_models.extend(extra_models)
 
 if Model_used not in classification_models:
-
     print(f"Model {Model_used} not found")
     print("Available models are:")
     print(classification_models.extend(extra_models))
     sys.exit()
-
 else:
     model_used = torchvision.models.__dict__[Model_used](weights='DEFAULT')
 
