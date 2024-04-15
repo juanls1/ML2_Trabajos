@@ -81,7 +81,26 @@ streamlit run src/streamlit/app.py
 ```
 
 
+## Best Models
+Below, we describe briefly, the models that can be found in the Google Drive folder and that have been considered to be the best models found so far
 
+**1.Resnet50 trained with 50 epochs:** The first model availabe is a simple resnet model that was the one we used in the first class presentation.
+ *Train Accuracy:90.55%
+ *Validation Accuracy:94.27%
+
+ **2.Resnext101 trained with Cross-Entropy Loss:** This is considered to be the best model trained. It is trained with CPU and with the default Cross-Entropy Loss function. As this one is considered the best model, it is evaluated also in the test set.
+ *Train Accuracy:95.24%
+ *Validation Accuracy:94.33%
+ *Test Accuracy:92.89%
+
+**3.Resnext101 trained with Custom Loss:** As it will be explained below in more detail, it was tried to create a new loss function and train models with it instead of Cross-Entropy. This one is the best among all the models trained with this customized metric:
+ *Train Accuracy:92.36%
+ *Validation Accuracy:95.92%
+
+ **4.Convnext model trained with GPU(NOT AVAILABLE):** Another phase of the project was training models with the GPU, so, as the training times would be shorter, more complex models could be trained. This one was the best model obtained with GPU, however due to some error, the last two layers of its classificator have not been loaded, so it does not work.
+ *Train Accuracy:94.24%
+ *Validation Accuracy:96.37%
+ ****
  
 ## Current Improvement Work 🔧
 
@@ -104,5 +123,5 @@ It must be pointed out that the best model trained so far achieved about a 95% a
 ### 5.Training with new Loss Function
 It was attempted to train models using a loss function specifically designed for this problem. As it was mentioned earlier, in some of the pictures our models misclassified, two potential classes could be appreciated. 
 Due to that, we tried to create a new loss function that did not penalize so much a missclasification in the cases that the true class was the second option for the model. 
-The results obtained were quite similar to the ones obtained with the CRoss-Entropy Loss Function, however, in the future we will follow this line of thought in order to get more accurate models.
+The results obtained were quite similar to the ones obtained with the Cross-Entropy Loss Function, however, in the future we will follow this line of thought in order to get more accurate models.
 
