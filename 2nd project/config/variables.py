@@ -75,10 +75,12 @@ Model_used_load = Model_used # Model used for the loaded model
 # Constants used for the streamlit app
 
 Images_types = ['png', 'jpg', 'jpeg']
-Disp_Models = ["Modelo 1", 
-               "Modelo 2",
-               "Modelo 3 (Good Model)"]
+Disp_Models = ["Simpler Model(Resnet50)", 
+               "CPU Best Model(Resnext101)",
+               "Best model with CustomLoss(Resnext101)",
+		"GPU Best Model"]
 Models_dir = os.path.join(root_dir, 'models')
-Models_paths = [os.path.join(Models_dir, 'resnet50-1epoch'), 
-                os.path.join(Models_dir, 'resnet50-3epoch-LR1e-5'),
-                os.path.join(Models_dir, 'convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam')]
+Models_paths = [os.path.join(Models_dir, 'resnet50-LR_0.0001-NE_50-UL_3-C_CrossEntropyLoss-O_Adam'), 
+                os.path.join(Models_dir, 'resnext101_32x8d-LR_0.0001-NE_30-UL_13-C_CrossEntropyLoss-O_Adam'),
+                os.path.join(Models_dir, 'resnext101_32x8d-LR_0.0001-NE_10-UL_8-C_CustomLoss-O_Adam'),
+		os.path.join(Models_dir, 'convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam')]
