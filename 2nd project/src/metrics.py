@@ -21,7 +21,7 @@ test_loss = 0.0
 test_accuracy = 0
 test_score = 0
 
-model_used = torchvision.models.convnext_small(weights='DEFAULT')
+model_used = torchvision.models.resnext101_32x8d(weights='DEFAULT')
 
 model = CNN(model_used, used_classes)
 
@@ -31,7 +31,7 @@ root_dir = Path(__file__).resolve().parent.parent
 sys.path.append(str(root_dir))
 Models_dir = os.path.join(root_dir, 'models')
 
-model_path = os.path.join(Models_dir, 'convnext_small-LR_1e-05-NE_50-UL_7-C_CrossEntropyLoss-O_Adam')
+model_path = os.path.join(Models_dir, 'resnext101_32x8d-LR_0.0001-NE_10-UL_8-C_CustomLoss-O_Adam')
 
 model_weights = load_model_weights(model_path, map_location=device)
 
