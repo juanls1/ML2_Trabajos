@@ -39,7 +39,7 @@ def main():
         # Selector de modo de clasificación
         classification_mode = st.radio(
             "Modo de Clasificación:",
-            ("Single-class", "Multi-class"),
+            ("Single-class", "Multi-class(Not available yet)"),
             help="Selecciona 'Single-class' si deseas que la imagen se clasifique en una sola categoría. Elige 'Multi-class' para obtener múltiples posibles categorías."
         )
         
@@ -56,7 +56,7 @@ def main():
         
         # Cargar el modelo
         device = torch.device('cpu')
-        model_weights = load_model_weights(model_path, map_location=device)
+        model_weights = load_model_weights(model_path)#, map_location=device)
         model_name = model_path.split('\\')[-1].split("-")[0]
 
 
