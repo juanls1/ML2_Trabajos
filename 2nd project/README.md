@@ -62,6 +62,9 @@ pip install -r requirements.txt
  python model_training.py
 ```
 3. Review the training of the model through W&B
+```
+ https://wandb.ai/mbd2023/ML2-CNN-PROJECT/table?nw=nwuser<your_user>
+```
 
 After executing the model_training cript, an URL that guides the user to the W&B report about the model report will be shown.
 
