@@ -42,31 +42,11 @@ df_orig_Irrad['FECHA'] =  s.dt.date
 
 # 2nd project Folder: CANONIST.IA (ENTREGA CNN)
 
-Ideas a realizar sobre el código base, ya con la conexión a Weights & Biases hecha:
+## CONTEXTO DEL TRABAJO
 
- + Usar otros modelos preentrenados (Tampoco se tienen que probar todos, pero hacer research y explicar un poco cada uno, y por qué escogemos y probamos los que escojamos)
+Explicado en profundidad en el README dedicado a dicho proyecto (interior de la carpeta). 
 
- + Decongelar más capas (aprende más de nuestros datos) (en cnn.py). Esto es fine tunning, entrenar el modelo con nuestros datos y que se especialice
-
- + Cambiar batch size y número de epochs
-
- + Crear nuestra propia CNN
-
- + RAG y Fine tunning (¿Lo estamos haciendo ya?). Diría que sí, fine tunning es descongelar capas, y RAG es hacer que el modelo responda con los datos dados por nosotros. Al darle datos de entrenamiento etiquetados diría que ya se hace (creo). Se podría hacer transfer learning (coger un modelo que haga otra cosa, como object detection, y cambiar la capa de object detection por una de classification)
-
- + Data augmentation (rotar imágenes, espejos, etc). Creo que ya se hace, investigar más (en cnn.py)
-
- + Más datos (creo que no vale)
-
- + No se pueden usar en color, verdad?
-
- + Cambiar optimizer y criterion
-
- + Cambiar learning rate y los pesos
-
- + ¿Grid search? Quizás tarda demasiado
-
- + Cargar un modelo preentrenado de HuggingFace más novedoso
+El trabajo se basa en la búsqueda del mejor modelo posible de clasificación multiclase de imágenes de idealista basándose en las principales CNN preentrenadas, junto a su presentación profesional end-to-end (repositorio, entorno, aplicación y presentación).
 
 
 # 3rd project Folder: ENTREGA APRENDIZAJE POR REFUERZO
