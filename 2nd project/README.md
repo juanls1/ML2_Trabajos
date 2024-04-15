@@ -37,6 +37,7 @@ pip install -r requirements.txt
 > [!IMPORTANT]
 > If you want to train the models with the **GPU**, you'll have to install [CUDA](https://developer.nvidia.com/cuda-toolkit-archive) and the respectiove versions of [Torch and torchivision](https://pytorch.org/) manually, as the versions from the requirements.txt are for **CPU** training
 
+
 ## Folder Explanation :file_folder: 
 
  + **config:** Folder containing the .py file with the parameters of the CNN that will be trained. It includes, pretrained model name, number of epochs, learning rate,... 
@@ -50,6 +51,9 @@ pip install -r requirements.txt
 
  + **wandb:** As all the info of the models is reported to W&B, W&B sends some logs about the information from each model saved in the page. That info is contained in this repository.
 
+> [!IMPORTANT]
+> The models have not been uploaded to the models folder because they are heavier than 100MB, so GitHub does not allow it. In order to run the streamlit app with the models we have trained, they will need to be downloaded from the following Google Drive folder, and upload them into the models folder.
+Google Drive Folder: https://drive.google.com/drive/folders/1FIgMu_dcUOpQlBKDgDgYiMXHL3J-99we?usp=sharing
 
 ## What can be done with the repository  
 
