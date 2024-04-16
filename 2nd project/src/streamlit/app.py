@@ -18,7 +18,7 @@ sys.path.append(str(root_dir))
 from src.utils.data_loader import num_classes, classnames
 from src.utils.cnn import load_model_weights, CNN
 from src.utils.local_functs import CustomImageDataset
-from config.variables import Images_size, Images_types, Disp_Models, Models_paths, classification_models, extra_models
+from config.variables import Images_size, Images_types, Disp_Models, Models_paths, classification_models, extra_models, threshold
 
 
 def main():
@@ -100,7 +100,7 @@ def main():
         model.eval()
         for images, labels in streamlit_loader:
             output = model(images)
-            top_probs, top_classes = torch.topk(output, k=15, dim=1)
+            top_probs, top_classes = torch.topk(output, k=2, dim=1)
             
         # print(top_probs)
 
@@ -119,7 +119,7 @@ def main():
         if classification_mode == "Single-class":
             st.success(f'### Clase predicha: {class_name_1} (Confianza: {round(prob_1, 5)})')
         else:
-            if diff > 0.2:
+            if diff > threshold:
                 st.success(f'### Clase predicha: {class_name_1} (Confianza: {round(prob_1, 5)})')
             else:
                 st.success(f'### Clase 1: {class_name_1} (Confianza: {round(prob_1, 5)})')

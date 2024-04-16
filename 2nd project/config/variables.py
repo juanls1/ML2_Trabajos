@@ -59,7 +59,7 @@ Unfreezed_layers = 0
 Number_epochs = 3
 Criterion = 'CrossEntropyLoss'   # 'CustomLoss' or 'CrossEntropyLoss'
 Optimizer = 'Adam'
-threshold = 0.2
+threshold = 0.95 # Threshold for the custom loss (It is too high, that is what we still have to improve. But in some photos it works well, for example, coast-highway)
 # Otro optimizer : torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9) # SGD with momentum
 Model_name = f"{Model_used}-LR_{Learning_rate}-NE_{Number_epochs}-UL_{Unfreezed_layers}-C_{Criterion}-O_{Optimizer}" # Name of the model to save
 
