@@ -125,3 +125,6 @@ It was attempted to train models using a loss function specifically designed for
 Due to that, we tried to create a new loss function that did not penalize so much a missclasification in the cases that the true class was the second option for the model. 
 The results obtained were quite similar to the ones obtained with the Cross-Entropy Loss Function, however, in the future we will follow this line of thought in order to get more accurate models.
 
+Nonetheless, with a threshold of 0.95, better results were acheived. Moreover, it is important to highlight that the custom loss model has space for improvement (only 10 epochs, with CPU, only 8 unfreezed layers and custom loss threshold of 0.5 that could be changed in order to train better). (This last paragraph and the change of threshold 
+to 0.95 was done on tuesday, in order to perform the last tests)
+
